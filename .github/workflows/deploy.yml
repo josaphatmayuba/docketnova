@@ -1,0 +1,37 @@
+name: Deploy to AWS Lightsail
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            set -e
+
+            cd /opt/docketnova
+
+            # Pull latest code (ne touche pas au .env qui est gitignored)
+            git pull origin main
+
+            # Copier les assets dans le contexte Docker web
+            rsync -a --delete app/         deploy/web/html/app/
+            rsync -a --delete styles/      deploy/web/html/styles/
+            rsync -a --delete brand/       deploy/web/html/brand/
+            cp "Docket Nova - Accueil.html" deploy/web/html/index.html
+
+            # Rebuild et redémarrage des containers
+            cd deploy
+            docker compose up --build -d --remove-orphans
+
+            # Statut
+            sleep 5
+            docker compose ps
