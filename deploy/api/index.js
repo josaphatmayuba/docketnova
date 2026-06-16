@@ -38,6 +38,87 @@ app.post('/api/demo', async (req, res) => {
   }
 });
 
+app.post('/api/verify-code', async (req, res) => {
+  const { code } = req.body;
+  if (!code || typeof code !== 'string') {
+    return res.status(400).json({ error: 'Code manquant.' });
+  }
+
+  const clean = code.trim().toUpperCase();
+
+  try {
+    const result = await pool.query(
+      `SELECT id, label, max_uses, use_count, expires_at
+       FROM demo_codes WHERE code = $1`,
+      [clean]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(403).json({ error: 'Code invalide.' });
+    }
+
+    const row = result.rows[0];
+
+    if (row.expires_at && new Date(row.expires_at) < new Date()) {
+      return res.status(403).json({ error: 'Code expiré.' });
+    }
+
+    if (row.use_count >= row.max_uses) {
+      return res.status(403).json({ error: 'Code déjà utilisé.' });
+    }
+
+    await pool.query(
+      `UPDATE demo_codes SET use_count = use_count + 1 WHERE id = $1`,
+      [row.id]
+    );
+
+    res.json({ ok: true, label: row.label || null });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur serveur.' });
+  }
+});
+
+// Créer un code (usage admin — protéger avec ADMIN_KEY en env)
+app.post('/api/admin/create-code', async (req, res) => {
+  const adminKey = req.headers['x-admin-key'];
+  if (!adminKey || adminKey !== process.env.ADMIN_KEY) {
+    return res.status(401).json({ error: 'Non autorisé.' });
+  }
+
+  const { label, email, max_uses, expires_at } = req.body;
+  const code = Math.random().toString(36).substring(2, 8).toUpperCase();
+
+  try {
+    await pool.query(
+      `INSERT INTO demo_codes (code, label, email, max_uses, expires_at)
+       VALUES ($1, $2, $3, $4, $5)`,
+      [code, label || null, email || null, max_uses || 1, expires_at || null]
+    );
+    res.json({ ok: true, code });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur serveur.' });
+  }
+});
+
+// Lister les codes (admin)
+app.get('/api/admin/codes', async (req, res) => {
+  const adminKey = req.headers['x-admin-key'];
+  if (!adminKey || adminKey !== process.env.ADMIN_KEY) {
+    return res.status(401).json({ error: 'Non autorisé.' });
+  }
+  try {
+    const result = await pool.query(
+      `SELECT id, code, label, email, max_uses, use_count, expires_at, created_at
+       FROM demo_codes ORDER BY created_at DESC`
+    );
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Erreur serveur.' });
+  }
+});
+
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 
 const port = process.env.PORT || 3001;
