@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Docket Nova — Prototype</title>
+  <link rel="icon" type="image/svg+xml" href="brand/favicon.svg"/>
+  <link rel="stylesheet" href="styles/tokens.css"/>
+  <style>
+    html, body, #root { height: 100%; margin: 0; }
+    body { background: var(--bg-app); }
+    button, input, textarea { font-family: var(--font-sans); }
+
+    /* Webkit scrollbars — slim, ink-tinted */
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-thumb { background: rgba(14,22,38,0.18); border-radius: 999px; border: 2px solid transparent; background-clip: content-box; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(14,22,38,0.32); border: 2px solid transparent; background-clip: content-box; }
+    ::selection { background: rgba(43, 95, 168, 0.22); color: var(--ink-950); }
+
+    /* Caret pulse for streaming text */
+    @keyframes caret-pulse { 0%, 60% { opacity: 1; } 61%, 100% { opacity: 0; } }
+    .lb-caret {
+      display: inline-block; width: 7px; height: 1em; vertical-align: -2px;
+      background: var(--oxblood-700); margin-left: 2px; animation: caret-pulse 850ms steps(1, end) infinite;
+    }
+
+    /* Block fade-in for streamed message blocks */
+    @keyframes lb-blockin {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .lb-block-in { animation: lb-blockin 280ms var(--ease-out) both; }
+
+    /* Soft pulse for "thinking" dot */
+    @keyframes lb-think { 0%, 100% { opacity: 0.25; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1); } }
+    .lb-thinking-dot { animation: lb-think 1.1s var(--ease-in-out) infinite; }
+
+    /* Italic case-name link, with hover state shifting to oxblood */
+    .lb-case-link {
+      font-family: var(--font-display); font-style: italic; font-weight: 500;
+      color: var(--ink-900); cursor: pointer; text-decoration: none;
+      border-bottom: 1px dotted var(--oxblood-300);
+      transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
+    }
+    .lb-case-link:hover { color: var(--oxblood-700); border-bottom-color: var(--oxblood-700); }
+    /* Light variant for case links inside the dark user bubble */
+    .lb-user-bubble .lb-case-link { color: #FBF8F2; border-bottom-color: rgba(229,168,177,0.55); }
+    .lb-user-bubble .lb-case-link:hover { color: #E5A8B1; border-bottom-color: #E5A8B1; }
+
+    /* Action chip hover */
+    .lb-chip:hover { background: var(--ink-50); border-color: var(--ink-300); }
+    .lb-chip-ink:hover { background: var(--ink-800); }
+
+    /* Hide native focus outlines, use a tinted ring */
+    button:focus-visible, input:focus-visible, textarea:focus-visible {
+      outline: none; box-shadow: var(--shadow-focus);
+    }
+
+    /* Faux markdown italic / bold inside streamed strings */
+    .lb-stream em { font-family: var(--font-display); font-style: italic; font-weight: 500; color: var(--ink-900); }
+    .lb-stream b  { font-weight: 600; color: var(--ink-950); }
+    .lb-stream code { font-family: var(--font-mono); font-size: 0.92em; background: var(--ink-50); padding: 1px 5px; border-radius: 4px; }
+  </style>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" src="app/tweaks-panel.jsx"></script>
+  <script type="text/babel" src="app/parts.jsx"></script>
+  <script type="text/babel" src="app/shell.jsx"></script>
+  <script type="text/babel" src="app/scenarios.jsx"></script>
+  <script type="text/babel" src="app/assistant-parts.jsx"></script>
+  <script type="text/babel" src="app/assistant.jsx"></script>
+  <script type="text/babel" src="app/search.jsx"></script>
+  <script type="text/babel" src="app/dossier.jsx"></script>
+  <script type="text/babel" src="app/suggestions-tab.jsx"></script>
+  <script type="text/babel" src="app/template-selector.jsx"></script>
+  <script type="text/babel" src="app/official-templates.jsx"></script>
+  <script type="text/babel" src="app/document-editor.jsx"></script>
+  <script type="text/babel" src="app/document-editor-pro.jsx"></script>
+  <script type="text/babel" src="app/dossiers-list.jsx"></script>
+  <script type="text/babel" src="app/dossiers-clio.jsx"></script>
+  <script type="text/babel" src="app/judges-list.jsx"></script>
+  <script type="text/babel" src="app/judge.jsx"></script>
+  <script type="text/babel" src="app/revirements-list.jsx"></script>
+  <script type="text/babel" src="app/cartography-list.jsx"></script>
+  <script type="text/babel" src="app/document-builder.jsx"></script>
+  <script type="text/babel" src="app/argumentaires-list.jsx"></script>
+  <script type="text/babel" src="app/cartography.jsx"></script>
+  <script type="text/babel" src="app/revirements.jsx"></script>
+  <script type="text/babel" src="app/argumentaires.jsx"></script>
+  <script type="text/babel" src="app/alerts.jsx"></script>
+  <script type="text/babel" src="app/integrations.jsx"></script>
+  <script type="text/babel" src="app/dashboard.jsx"></script>
+  <script type="text/babel" src="app/app.jsx"></script>
+</body>
+</html>

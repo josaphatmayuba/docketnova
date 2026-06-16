@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" role="img" aria-label="Docket Nova">
+  <rect width="100" height="100" rx="22" fill="#07101F"></rect>
+  <rect x="22" y="66" width="56" height="3.2" rx="1.6" fill="#FBF8F2"></rect>
+  <rect x="22" y="75.5" width="44" height="3.2" rx="1.6" fill="#46506A"></rect>
+  <rect x="22" y="85" width="34" height="3.2" rx="1.6" fill="#46506A"></rect>
+  <path d="M50 12 Q55 41 79 46 Q55 51 50 79 Q45 51 21 46 Q45 41 50 12 Z" fill="#E8C56C"></path>
+  <circle cx="73" cy="24" r="2.8" fill="#E5A8B1"></circle>
+  <circle cx="29" cy="31" r="1.9" fill="#E5A8B1"></circle>
+</svg>

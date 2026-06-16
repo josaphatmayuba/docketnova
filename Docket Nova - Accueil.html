@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docket Nova — L'intelligence de la jurisprudence canadienne</title>
+<link rel="icon" type="image/svg+xml" href="brand/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-950:#07101F; --ink-900:#0E1626; --ink-800:#16243C; --ink-700:#1F2A44; --ink-600:#36425A; --ink-500:#5A6479; --ink-400:#8590A4; --ink-300:#B3BCCB; --ink-200:#D6DCE5; --ink-100:#E7EBF1; --ink-50:#F2F4F8;
+    --parch-50:#FBF8F2; --parch-100:#F5EFE2; --parch-200:#ECE3CE; --parch-300:#DCCFAE;
+    --paper:#FFFFFF;
+    --oxblood:#7A1F2B; --oxblood-600:#94293A; --oxblood-300:#E5A8B1; --oxblood-50:#FBEEF0;
+    --gold:#C8941F; --gold-700:#A87E1A; --gold-300:#E8C56C; --gold-50:#FBF3D9;
+    --blue:#2B5FA8; --blue-700:#1F4682; --blue-50:#E4ECF5;
+    --green:#3D7A4E; --green-700:#2B5C3A; --green-50:#E7F0EA;
+    --fd:'Newsreader',Georgia,serif;
+    --fs:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+    --fm:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--parch-50);color:var(--ink-900);font-family:var(--fs);-webkit-font-smoothing:antialiased;line-height:1.5;}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 32px;}
+  a{color:inherit;text-decoration:none;}
+  .serif{font-family:var(--fd);}
+  .over{font-family:var(--fm);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--oxblood);}
+
+  .btn{display:inline-flex;align-items:center;gap:9px;font-family:var(--fs);font-size:15px;font-weight:500;padding:13px 22px;border-radius:9px;cursor:pointer;border:1px solid transparent;transition:all .18s ease;white-space:nowrap;}
+  .btn-primary{background:var(--oxblood);color:#fff;}
+  .btn-primary:hover{background:var(--oxblood-600);transform:translateY(-1px);box-shadow:0 8px 22px -8px rgba(122,31,43,.5);}
+  .btn-ghost{background:transparent;color:var(--ink-800);border-color:var(--ink-200);}
+  .btn-ghost:hover{border-color:var(--ink-400);background:var(--paper);}
+
+  /* lang toggle */
+  .lang{display:inline-flex;border:1px solid var(--ink-200);border-radius:8px;overflow:hidden;font-family:var(--fm);font-size:12px;}
+  .lang button{border:none;background:transparent;padding:7px 11px;cursor:pointer;color:var(--ink-500);font-family:var(--fm);font-size:12px;letter-spacing:.04em;transition:all .15s;}
+  .lang button.on{background:var(--ink-900);color:var(--parch-50);}
+
+  /* NAV */
+  nav.top{position:sticky;top:0;z-index:50;background:rgba(251,248,242,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--parch-200);}
+  .nav-in{display:flex;align-items:center;gap:30px;height:70px;}
+  .brand{display:flex;align-items:center;gap:11px;}
+  .brand .wm{font-family:var(--fd);font-weight:500;font-size:21px;letter-spacing:-.02em;white-space:nowrap;}
+  .brand .wm i{font-style:italic;color:var(--oxblood);}
+  .nav-links{display:flex;gap:24px;margin-left:12px;}
+  .nav-links a{font-size:14.5px;color:var(--ink-600);transition:color .15s;white-space:nowrap;}
+  .nav-links a:hover{color:var(--ink-950);}
+  .nav-cta{margin-left:auto;display:flex;align-items:center;gap:14px;}
+  .nav-cta .login{font-size:14.5px;color:var(--ink-700);white-space:nowrap;}
+
+  /* HERO */
+  .hero{position:relative;overflow:hidden;padding:88px 0 96px;}
+  .hero-bg{position:absolute;inset:0;pointer-events:none;}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;position:relative;}
+  .hero h1{font-family:var(--fd);font-weight:500;font-size:62px;line-height:1.04;letter-spacing:-.028em;margin:22px 0 0;}
+  .hero h1 i{font-style:italic;color:var(--oxblood);}
+  .hero .lede{font-size:19px;line-height:1.6;color:var(--ink-600);margin:26px 0 0;max-width:42ch;}
+  .hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;}
+  .trust{display:flex;gap:20px;margin-top:30px;flex-wrap:wrap;font-size:13px;color:var(--ink-500);font-family:var(--fm);letter-spacing:.02em;}
+  .trust span{display:inline-flex;align-items:center;gap:7px;}
+  .trust .dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+
+  .pcard{background:var(--paper);border:1px solid var(--parch-200);border-radius:16px;box-shadow:0 30px 70px -36px rgba(7,16,31,.4);overflow:hidden;}
+  .pcard .pc-head{display:flex;align-items:center;gap:9px;padding:14px 18px;border-bottom:1px solid var(--ink-100);background:var(--parch-50);}
+  .pc-search{flex:1;display:flex;align-items:center;gap:9px;background:var(--paper);border:1px solid var(--ink-100);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--ink-700);}
+  .pc-body{padding:16px 18px;display:flex;flex-direction:column;gap:12px;}
+  .pc-res{border:1px solid var(--ink-100);border-radius:11px;padding:14px;}
+  .pc-res .case{font-family:var(--fd);font-style:italic;font-size:17px;color:var(--ink-900);}
+  .pc-res .meta{display:flex;align-items:center;gap:8px;margin-top:4px;}
+  .tag{font-family:var(--fm);font-size:10.5px;padding:2px 7px;border-radius:4px;letter-spacing:.03em;}
+  .tag.fr{background:var(--blue-50);color:var(--blue-700);}
+  .tag.en{background:var(--parch-100);color:var(--ink-600);}
+  .cite{font-family:var(--fm);font-size:11px;color:var(--ink-400);}
+
+  .scores{display:flex;gap:14px;margin-top:13px;}
+  .score{flex:1;}
+  .score .lab{display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;letter-spacing:.04em;color:var(--ink-500);margin-bottom:5px;text-transform:uppercase;}
+  .score .lab b{color:var(--ink-900);font-weight:600;}
+  .bar{height:6px;border-radius:99px;overflow:hidden;}
+  .bar.aut{background:var(--gold-50);} .bar.aut i{background:var(--gold);}
+  .bar.per{background:var(--blue-50);} .bar.per i{background:var(--blue);}
+  .bar.sol{background:var(--oxblood-50);} .bar.sol i{background:var(--oxblood-600);}
+  .bar i{display:block;height:100%;border-radius:99px;}
+  .flag{margin-top:13px;display:flex;align-items:center;gap:9px;background:var(--oxblood-50);border:1px solid var(--oxblood-300);border-radius:9px;padding:9px 12px;font-size:12.5px;color:var(--oxblood);}
+
+  section{padding:90px 0;}
+  .sec-tag{text-align:center;}
+  .sec-head{max-width:62ch;margin:0 auto;text-align:center;}
+  .sec-head h2{font-family:var(--fd);font-weight:500;font-size:42px;line-height:1.12;letter-spacing:-.022em;margin:16px 0 0;}
+  .sec-head h2 i{font-style:italic;color:var(--oxblood);}
+  .sec-head p{font-size:18px;color:var(--ink-600);margin:18px auto 0;max-width:54ch;line-height:1.6;}
+
+  .logos{padding:46px 0;border-top:1px solid var(--parch-200);border-bottom:1px solid var(--parch-200);background:var(--parch-100);}
+  .logos .lab{text-align:center;font-family:var(--fm);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-400);margin-bottom:26px;}
+  .logos .row{display:flex;justify-content:center;align-items:center;gap:54px;flex-wrap:wrap;}
+  .firm{font-family:var(--fd);font-size:21px;color:var(--ink-400);letter-spacing:.01em;opacity:.85;}
+  .firm b{font-weight:600;color:var(--ink-500);}
+
+  .cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:54px;}
+  .card{background:var(--paper);border:1px solid var(--parch-200);border-radius:16px;padding:32px;}
+  .card .ic{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;}
+  .card h3{font-family:var(--fd);font-weight:500;font-size:23px;letter-spacing:-.01em;margin-bottom:4px;}
+  .card .axis{font-family:var(--fm);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px;}
+  .card p{font-size:15px;color:var(--ink-600);line-height:1.6;}
+  .card .num{font-family:var(--fd);font-size:40px;font-weight:500;line-height:1;margin-bottom:2px;}
+
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+  .split.rev{direction:rtl;} .split.rev>*{direction:ltr;}
+  .split h2{font-family:var(--fd);font-weight:500;font-size:38px;line-height:1.12;letter-spacing:-.02em;margin:16px 0 0;}
+  .split h2 i{font-style:italic;color:var(--oxblood);}
+  .split p{font-size:17px;color:var(--ink-600);line-height:1.62;margin-top:18px;}
+  .feat-list{list-style:none;margin-top:22px;display:flex;flex-direction:column;gap:12px;}
+  .feat-list li{display:flex;gap:12px;font-size:15.5px;color:var(--ink-700);align-items:flex-start;line-height:1.5;}
+  .feat-list .ck{flex:none;width:22px;height:22px;border-radius:50%;background:var(--green-50);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;margin-top:1px;}
+
+  .mock{background:var(--paper);border:1px solid var(--parch-200);border-radius:16px;box-shadow:0 24px 60px -34px rgba(7,16,31,.34);overflow:hidden;}
+  .mock-head{padding:13px 16px;border-bottom:1px solid var(--ink-100);display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:11.5px;color:var(--ink-500);background:var(--parch-50);}
+  .mock-body{padding:18px;}
+  .resrow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;border:1px solid var(--ink-100);border-radius:10px;margin-bottom:10px;}
+  .resrow:last-child{margin-bottom:0;}
+  .resrow .case{font-family:var(--fd);font-style:italic;font-size:15px;}
+  .mini-scores{display:flex;gap:5px;}
+  .pill{font-family:var(--fm);font-size:10px;font-weight:500;padding:3px 7px;border-radius:5px;}
+  .pill.aut{background:var(--gold-50);color:var(--gold-700);}
+  .pill.per{background:var(--blue-50);color:var(--blue-700);}
+  .pill.sol-hi{background:var(--green-50);color:var(--green-700);}
+  .pill.sol-lo{background:var(--oxblood-50);color:var(--oxblood);}
+
+  .rev-card{border:1px solid var(--oxblood-300);border-radius:14px;overflow:hidden;}
+  .rev-top{background:var(--oxblood-50);padding:16px 18px;border-bottom:1px solid var(--oxblood-300);}
+  .rev-strike{font-family:var(--fd);font-style:italic;font-size:19px;color:var(--ink-700);text-decoration:line-through;text-decoration-color:var(--oxblood-300);}
+  .rev-badge{display:inline-flex;align-items:center;gap:7px;background:var(--oxblood);color:#fff;font-family:var(--fm);font-size:10.5px;letter-spacing:.06em;padding:4px 9px;border-radius:5px;text-transform:uppercase;margin-top:10px;}
+  .rev-bot{padding:16px 18px;}
+  .rev-bot .lab{font-family:var(--fm);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--green-700);margin-bottom:8px;}
+  .rev-new{font-family:var(--fd);font-style:italic;font-size:18px;color:var(--ink-900);}
+
+  /* AI section */
+  .ai{background:var(--parch-100);}
+  .ai-grid{display:grid;grid-template-columns:.95fr 1.05fr;gap:60px;align-items:center;}
+  .ai h2{font-family:var(--fd);font-weight:500;font-size:38px;line-height:1.12;letter-spacing:-.02em;margin:16px 0 0;}
+  .ai h2 i{font-style:italic;color:var(--oxblood);}
+  .ai .lede{font-size:17px;color:var(--ink-600);line-height:1.62;margin-top:18px;}
+  .principles{list-style:none;margin-top:26px;display:flex;flex-direction:column;gap:18px;}
+  .principles li{display:flex;gap:15px;}
+  .principles .pn{flex:none;width:34px;height:34px;border-radius:9px;background:var(--ink-950);color:var(--gold-300);display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:13px;}
+  .principles .pt{font-family:var(--fd);font-size:18px;font-weight:500;color:var(--ink-900);}
+  .principles .pd{font-size:14.5px;color:var(--ink-600);line-height:1.55;margin-top:3px;}
+  .ai-note{margin-top:28px;display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--ink-600);font-family:var(--fm);background:var(--paper);border:1px solid var(--parch-200);border-radius:9px;padding:10px 14px;}
+  .ai-note .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+
+  /* assistant chat mock */
+  .chat{background:var(--paper);border:1px solid var(--parch-200);border-radius:16px;box-shadow:0 24px 60px -34px rgba(7,16,31,.34);overflow:hidden;}
+  .chat-head{background:var(--ink-950);color:var(--parch-50);padding:14px 18px;display:flex;align-items:center;gap:11px;}
+  .chat-head .nm{font-family:var(--fd);font-size:15px;font-weight:500;}
+  .chat-head .st{font-size:10.5px;color:var(--ink-400);font-family:var(--fm);letter-spacing:.06em;}
+  .chat-body{padding:20px;display:flex;flex-direction:column;gap:16px;}
+  .bubble{max-width:88%;padding:13px 16px;border-radius:14px;font-size:14.5px;line-height:1.55;}
+  .bubble.user{align-self:flex-end;background:var(--ink-900);color:var(--parch-50);border-bottom-right-radius:4px;}
+  .bubble.ai{align-self:flex-start;background:var(--parch-50);border:1px solid var(--ink-100);color:var(--ink-800);border-bottom-left-radius:4px;}
+  .bubble.ai .src{margin-top:11px;display:flex;flex-direction:column;gap:7px;}
+  .src-chip{display:flex;align-items:center;gap:8px;background:var(--paper);border:1px solid var(--ink-100);border-radius:8px;padding:7px 10px;}
+  .src-chip .ci{font-family:var(--fd);font-style:italic;font-size:13px;color:var(--ink-900);}
+  .src-chip .cc{font-family:var(--fm);font-size:10px;color:var(--ink-400);margin-left:auto;}
+  .src-chip .vp{font-family:var(--fm);font-size:9.5px;font-weight:500;padding:2px 6px;border-radius:4px;background:var(--green-50);color:var(--green-700);}
+
+  .comply{background:var(--ink-950);color:var(--parch-50);border-radius:22px;padding:64px;position:relative;overflow:hidden;}
+  .comply .over{color:var(--gold-300);}
+  .comply h2{font-family:var(--fd);font-weight:500;font-size:40px;line-height:1.12;letter-spacing:-.02em;margin:16px 0 0;color:var(--parch-50);}
+  .comply h2 i{font-style:italic;color:var(--gold-300);}
+  .comply .sub{font-size:17px;color:var(--ink-300);margin-top:16px;max-width:56ch;line-height:1.6;}
+  .comply-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:42px;}
+  .comply-grid .c{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:13px;padding:24px;}
+  .comply-grid .c .t{font-family:var(--fd);font-size:17px;font-weight:500;margin-bottom:7px;color:#fff;}
+  .comply-grid .c .d{font-size:13.5px;color:var(--ink-300);line-height:1.55;}
+  .comply-grid .c .k{font-family:var(--fm);font-size:11px;letter-spacing:.06em;color:var(--gold-300);text-transform:uppercase;margin-bottom:14px;display:block;}
+
+  .quote{max-width:920px;margin:0 auto;text-align:center;}
+  .quote .mark{font-family:var(--fd);font-size:72px;line-height:.4;color:var(--oxblood-300);height:40px;}
+  .quote blockquote{font-family:var(--fd);font-size:31px;line-height:1.32;letter-spacing:-.012em;color:var(--ink-900);margin:18px 0 0;}
+  .quote blockquote i{font-style:italic;color:var(--oxblood);}
+  .quote .who{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:34px;}
+  .quote .av{width:48px;height:48px;border-radius:50%;background:var(--ink-900);color:var(--parch-50);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:18px;font-weight:500;}
+  .quote .who .nm{text-align:left;}
+  .quote .who .nm b{font-weight:600;font-size:15px;display:block;}
+  .quote .who .nm span{font-size:13px;color:var(--ink-500);}
+
+  .final{text-align:center;background:var(--parch-100);border-top:1px solid var(--parch-200);}
+  .final h2{font-family:var(--fd);font-weight:500;font-size:46px;line-height:1.1;letter-spacing:-.024em;}
+  .final h2 i{font-style:italic;color:var(--oxblood);}
+  .final p{font-size:18px;color:var(--ink-600);margin:18px auto 32px;max-width:48ch;}
+
+  footer{background:var(--ink-950);color:var(--ink-300);padding:64px 0 40px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;}
+  .foot-brand .wm{font-family:var(--fd);font-weight:500;font-size:21px;color:var(--parch-50);letter-spacing:-.02em;}
+  .foot-brand .wm i{font-style:italic;color:var(--gold-300);}
+  .foot-brand p{font-size:13.5px;color:var(--ink-400);margin-top:14px;line-height:1.6;max-width:32ch;}
+  .foot-col h5{font-family:var(--fm);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-500);margin-bottom:16px;}
+  .foot-col a{display:block;font-size:14px;color:var(--ink-300);margin-bottom:11px;transition:color .15s;}
+  .foot-col a:hover{color:var(--parch-50);}
+  .foot-bot{display:flex;justify-content:space-between;align-items:center;margin-top:50px;padding-top:24px;border-top:1px solid rgba(255,255,255,.08);font-size:12.5px;color:var(--ink-500);flex-wrap:wrap;gap:14px;}
+
+  @media(max-width:980px){
+    .hero-grid,.split,.ai-grid{grid-template-columns:1fr;gap:40px;}
+    .split.rev{direction:ltr;}
+    .cards3,.integ,.comply-grid{grid-template-columns:1fr;}
+    .foot-grid{grid-template-columns:1fr 1fr;gap:32px;}
+    .hero h1{font-size:44px;} .sec-head h2,.comply h2,.final h2,.ai h2{font-size:32px;}
+    .nav-links{display:none;} .comply{padding:40px 26px;}
+    .quote blockquote{font-size:24px;}
+  }
+  .integ{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:50px;}
+  .integ .it{background:var(--paper);border:1px solid var(--parch-200);border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:14px;}
+  .integ .it .ico{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-family:var(--fs);font-size:18px;}
+  .integ .it h4{font-family:var(--fd);font-weight:500;font-size:19px;}
+  .integ .it p{font-size:14px;color:var(--ink-600);line-height:1.55;}
+
+  /* features suite grid */
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:50px;}
+  .fcard{background:var(--paper);border:1px solid var(--parch-200);border-radius:14px;padding:26px;}
+  .fcard .fic{width:40px;height:40px;border-radius:10px;background:var(--parch-100);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+  .fcard h4{font-family:var(--fd);font-weight:500;font-size:19px;margin-bottom:7px;letter-spacing:-.01em;}
+  .fcard p{font-size:14px;color:var(--ink-600);line-height:1.55;}
+  .doc-out{border-right:1px solid var(--ink-100);padding:16px 14px;display:flex;flex-direction:column;gap:11px;background:var(--parch-50);}
+  .doc-out .oi{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--ink-700);}
+  .doc-out .oi .od{width:7px;height:7px;border-radius:50%;flex:none;}
+  .ai-suggest{margin-top:16px;display:flex;gap:10px;align-items:flex-start;background:var(--gold-50);border:1px solid var(--gold-300);border-radius:10px;padding:11px 13px;}
+  .ai-suggest .txt{font-size:12.5px;color:var(--ink-700);line-height:1.5;}
+  .ai-suggest .txt b{color:var(--gold-700);}
+  @media(max-width:980px){.feat-grid{grid-template-columns:1fr;}}
+
+  /* 11 fonctionnalités panorama */
+  #fonctionnalites .grp{margin-top:50px;}
+  .grp-head{display:flex;align-items:baseline;gap:14px;margin-bottom:22px;}
+  .grp-head .gt{font-family:var(--fd);font-style:italic;font-size:22px;color:var(--ink-900);white-space:nowrap;}
+  .grp-head .gn{font-family:var(--fm);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-400);white-space:nowrap;}
+  .grp-head .gl{flex:1;height:1px;background:var(--parch-200);}
+  .f11-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+  .f11{background:var(--paper);border:1px solid var(--parch-200);border-radius:14px;padding:24px;position:relative;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
+  .f11:hover{border-color:var(--ink-200);transform:translateY(-2px);box-shadow:0 18px 42px -28px rgba(7,16,31,.42);}
+  .f11 .f11-top{display:flex;align-items:center;gap:13px;margin-bottom:14px;}
+  .f11 .f11-num{font-family:var(--fm);font-size:12px;font-weight:600;color:var(--oxblood);letter-spacing:.04em;}
+  .f11 .f11-ic{width:38px;height:38px;border-radius:10px;background:var(--parch-100);display:flex;align-items:center;justify-content:center;flex:none;}
+  .f11 h4{font-family:var(--fd);font-weight:500;font-size:19px;letter-spacing:-.01em;margin-bottom:6px;}
+  .f11 p{font-size:13.5px;color:var(--ink-600);line-height:1.55;}
+  .f11 .f11-sys{position:absolute;top:20px;right:20px;font-family:var(--fm);font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-400);background:var(--parch-100);padding:3px 7px;border-radius:5px;}
+  .f-hero{background:var(--ink-950);color:var(--parch-50);border-radius:18px;padding:38px 40px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center;margin-top:48px;position:relative;overflow:hidden;}
+  .f-hero .fh-badge{position:absolute;top:22px;right:24px;font-family:var(--fm);font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--oxblood);color:#fff;padding:4px 9px;border-radius:5px;}
+  .f-hero .fh-star{width:74px;height:74px;border-radius:16px;background:rgba(232,197,108,.12);border:1px solid rgba(232,197,108,.28);display:flex;align-items:center;justify-content:center;flex:none;}
+  .f-hero .fh-num{font-family:var(--fm);font-size:11.5px;font-weight:600;color:var(--gold-300);letter-spacing:.06em;text-transform:uppercase;}
+  .f-hero h3{font-family:var(--fd);font-weight:500;font-size:27px;letter-spacing:-.015em;margin:8px 0 0;color:#fff;}
+  .f-hero h3 i{font-style:italic;color:var(--gold-300);}
+  .f-hero p{font-size:15px;color:var(--ink-300);line-height:1.6;margin-top:11px;max-width:66ch;}
+  @media(max-width:980px){.f11-grid{grid-template-columns:1fr 1fr;}.f-hero{grid-template-columns:1fr;padding:30px 24px;}}
+  @media(max-width:680px){.f11-grid{grid-template-columns:1fr;}}
+
+  /* MODAL */
+  .modal-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(7,16,31,.55);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .22s ease;}
+  .modal-overlay.open{opacity:1;pointer-events:auto;}
+  .modal{background:var(--paper);border-radius:20px;width:100%;max-width:520px;box-shadow:0 40px 90px -30px rgba(7,16,31,.45);overflow:hidden;transform:translateY(18px) scale(.97);transition:transform .22s ease;}
+  .modal-overlay.open .modal{transform:none;}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:24px 28px 0;}
+  .modal-head .mh-title{font-family:var(--fd);font-size:22px;font-weight:500;letter-spacing:-.015em;}
+  .modal-head .mh-title i{font-style:italic;color:var(--oxblood);}
+  .modal-close{width:34px;height:34px;border-radius:50%;border:none;background:var(--ink-100);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink-500);transition:background .15s;flex:none;}
+  .modal-close:hover{background:var(--ink-200);}
+  .modal-body{padding:24px 28px 28px;}
+
+  .type-toggle{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:22px;}
+  .type-btn{border:2px solid var(--ink-200);border-radius:12px;padding:14px 16px;cursor:pointer;background:transparent;text-align:left;transition:all .16s;position:relative;}
+  .type-btn:hover{border-color:var(--ink-400);}
+  .type-btn.sel{border-color:var(--oxblood);background:var(--oxblood-50);}
+  .type-btn .tb-label{font-family:var(--fd);font-weight:500;font-size:16px;color:var(--ink-900);display:block;margin-bottom:3px;}
+  .type-btn .tb-desc{font-size:12.5px;color:var(--ink-500);line-height:1.4;}
+  .type-btn .tb-check{position:absolute;top:12px;right:12px;width:18px;height:18px;border-radius:50%;background:var(--oxblood);display:none;align-items:center;justify-content:center;}
+  .type-btn.sel .tb-check{display:flex;}
+
+  .form-fields{display:flex;flex-direction:column;gap:14px;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field label{font-size:13px;font-weight:500;color:var(--ink-700);}
+  .field input,.field textarea,.field select{font-family:var(--fs);font-size:15px;padding:11px 14px;border:1px solid var(--ink-200);border-radius:10px;background:var(--paper);color:var(--ink-900);outline:none;transition:border-color .15s;width:100%;}
+  .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--oxblood);}
+  .field textarea{resize:vertical;min-height:90px;}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .field-optional{font-size:11.5px;color:var(--ink-400);font-family:var(--fm);}
+
+  .modal-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:18px;border-top:1px solid var(--ink-100);margin-top:6px;}
+  .modal-footer .privacy{font-size:12px;color:var(--ink-400);max-width:28ch;line-height:1.4;}
+  .btn-submit{background:var(--oxblood);color:#fff;border:none;padding:13px 26px;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--fs);transition:all .18s;white-space:nowrap;}
+  .btn-submit:hover{background:var(--oxblood-600);transform:translateY(-1px);box-shadow:0 8px 22px -8px rgba(122,31,43,.5);}
+  .btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none;}
+
+  .modal-success{text-align:center;padding:16px 0 8px;}
+  .modal-success .ms-icon{width:58px;height:58px;border-radius:50%;background:var(--green-50);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;}
+  .modal-success h3{font-family:var(--fd);font-size:22px;font-weight:500;}
+  .modal-success p{font-size:15px;color:var(--ink-600);margin-top:10px;line-height:1.55;}
+
+  @media(max-width:540px){
+    .modal{border-radius:16px;}
+    .modal-head,.modal-body{padding-left:20px;padding-right:20px;}
+    .field-row{grid-template-columns:1fr;}
+    .type-toggle{grid-template-columns:1fr 1fr;gap:8px;}
+    .type-toggle .type-btn:last-child{grid-column:1/-1;}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="top">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top">
+      <svg width="30" height="30" viewBox="0 0 64 64" fill="none">
+        <rect x="11.5" y="43.5" width="41" height="2.4" rx="1.2" fill="#1F2A44"/>
+        <rect x="11.5" y="50" width="32" height="2.4" rx="1.2" fill="#B3BCCB"/>
+        <rect x="11.5" y="56.4" width="25.6" height="2.4" rx="1.2" fill="#B3BCCB"/>
+        <path d="M32 5 Q35.5 25 52 29 Q35.5 33 32 53 Q28.5 33 12 29 Q28.5 25 32 5 Z" fill="#7A1F2B"/>
+        <circle cx="47.5" cy="14.5" r="1.9" fill="#C8941F"/>
+        <circle cx="18" cy="19.5" r="1.3" fill="#C8941F"/>
+      </svg>
+      <span class="wm">Docket <i>Nova</i></span>
+    </a>
+    <div class="nav-links">
+      <a href="#fonctionnalites" data-en="The 11 features">Les 11 fonctionnalités</a>
+      <a href="#scores" data-en="3D Scoring">Le Scoring 3D</a>
+      <a href="#bilingue" data-en="Bilingual search">Recherche bilingue</a>
+      <a href="#ia" data-en="AI">L'IA</a>
+      <a href="#redaction" data-en="Drafting">Rédaction</a>
+      <a href="#conformite" data-en="Compliance">Conformité</a>
+      <a href="#integrations" data-en="Integrations">Intégrations</a>
+    </div>
+    <div class="nav-cta">
+      <div class="lang" role="group" aria-label="Language">
+        <button data-lang="fr" class="on">FR</button>
+        <button data-lang="en">EN</button>
+      </div>
+      <a class="btn btn-primary" href="#demo" data-en="Request a demo">Demander une démo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="hero-bg">
+    <svg width="100%" height="100%" style="position:absolute;inset:0;opacity:.5" preserveAspectRatio="xMidYMid slice">
+      <defs><radialGradient id="glow" cx="72%" cy="18%" r="55%"><stop offset="0" stop-color="#F5EFE2"/><stop offset="1" stop-color="#FBF8F2" stop-opacity="0"/></radialGradient></defs>
+      <rect width="100%" height="100%" fill="url(#glow)"/>
+    </svg>
+  </div>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="over" data-en="AI-augmented legal research · Canada">Recherche juridique augmentée · Canada</div>
+      <h1 data-en="All Canadian case law — read, <i>weighed</i> and cited.">Toute la jurisprudence canadienne — lue, <i>pesée</i> et citée.</h1>
+      <p class="lede" data-en="Docket Nova indexes Canadian law — civil and common law, in French and English — and gives every ruling three verifiable scores. You stay in control; the AI always shows its sources.">Docket Nova indexe le droit canadien — civil et common law, en français comme en anglais — et attribue à chaque décision trois scores vérifiables. Vous gardez le contrôle ; l'intelligence montre toujours ses sources.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#demo" data-en="Request a demo →">Demander une démo →</a>
+        <a class="btn btn-ghost" href="#scores" data-en="Explore 3D Scoring">Découvrir le Scoring 3D</a>
+      </div>
+      <div class="trust">
+        <span><span class="dot"></span><span data-en="Hosted in Canada">Hébergé au Canada</span></span>
+        <span><span class="dot"></span><span data-en="PIPEDA compliant">Conforme à la PIPEDA</span></span>
+        <span><span class="dot"></span><span data-en="Zero training on your data">Zéro entraînement sur vos données</span></span>
+      </div>
+    </div>
+    <div class="pcard">
+      <div class="pc-head">
+        <div class="pc-search">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8590A4" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <span data-en="good-faith obligation · constructive dismissal">obligation de bonne foi · congédiement déguisé</span>
+        </div>
+        <span class="tag fr">FR + EN</span>
+      </div>
+      <div class="pc-body">
+        <div class="pc-res">
+          <div class="case">Bombardier inc. c. Commission des droits</div>
+          <div class="meta"><span class="tag fr">FR</span><span class="cite">2015 CSC 39</span></div>
+          <div class="scores">
+            <div class="score"><div class="lab"><span data-en="Authority">Autorité</span> <b>88</b></div><div class="bar aut"><i style="width:88%"></i></div></div>
+            <div class="score"><div class="lab"><span data-en="Relevance">Pertinence</span> <b>94</b></div><div class="bar per"><i style="width:94%"></i></div></div>
+            <div class="score"><div class="lab"><span data-en="Standing">Solidité</span> <b>91</b></div><div class="bar sol"><i style="width:91%;background:#3D7A4E"></i></div></div>
+          </div>
+        </div>
+        <div class="pc-res">
+          <div class="case">McLeod v. Northern Tablelands</div>
+          <div class="meta"><span class="tag en">EN</span><span class="cite">2019 ONCA 712</span></div>
+          <div class="scores">
+            <div class="score"><div class="lab"><span data-en="Authority">Autorité</span> <b>71</b></div><div class="bar aut"><i style="width:71%"></i></div></div>
+            <div class="score"><div class="lab"><span data-en="Relevance">Pertinence</span> <b>86</b></div><div class="bar per"><i style="width:86%"></i></div></div>
+            <div class="score"><div class="lab"><span data-en="Standing">Solidité</span> <b>41</b></div><div class="bar sol"><i style="width:41%"></i></div></div>
+          </div>
+          <div class="flag">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A1F2B" stroke-width="2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+            <span data-en="Standing weakened — distinguished by the Court of Appeal in 2023">Solidité affaiblie — distingué par la Cour d'appel en 2023</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 11 FONCTIONNALITÉS -->
+<section id="fonctionnalites">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="over sec-tag" data-en="The whole product">Le produit en entier</div>
+      <h2 data-en="Eleven features, <i>one</i> intelligence.">Onze fonctionnalités, <i>une seule</i> intelligence.</h2>
+      <p data-en="Everything a Canadian litigator reaches for &mdash; search, strategy and the assistant &mdash; built on the same scored, bilingual case law.">Tout ce dont un plaideur canadien a besoin &mdash; recherche, stratégie et assistant &mdash; bâti sur la même jurisprudence scorée et bilingue.</p>
+    </div>
+
+    <!-- Assistant — transversal hero -->
+    <div class="f-hero">
+      <span class="fh-badge" data-en="Flagship">Nouveau</span>
+      <div class="fh-star">
+        <svg width="40" height="40" viewBox="0 0 64 64" fill="none"><path d="M32 8 Q35 27 50 30 Q35 33 32 52 Q29 33 14 30 Q29 27 32 8 Z" fill="#E8C56C"/></svg>
+      </div>
+      <div>
+        <div class="fh-num">10 · <span data-en="Cross-cutting">Transversal</span></div>
+        <h3 data-en="The legal <i>assistant</i>">L'<i>assistant</i> juridique</h3>
+        <p data-en="The thread that ties the other ten together: it drafts, summarizes and answers in plain language &mdash; every claim grounded in real case law, every citation clickable and verifiable.">Le fil conducteur des dix autres fonctionnalités : il rédige, résume et répond en langage clair &mdash; chaque affirmation ancrée dans la jurisprudence réelle, chaque citation cliquable et vérifiable.</p>
+      </div>
+    </div>
+
+    <!-- Cœur -->
+    <div class="grp">
+      <div class="grp-head"><span class="gt" data-en="Core">Cœur</span><span class="gn" data-en="3 features">3 fonctionnalités</span><span class="gl"></span></div>
+      <div class="f11-grid">
+        <div class="f11">
+          <div class="f11-top"><span class="f11-num">01</span><span class="f11-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2A44" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span></div>
+          <h4 data-en="Unified search">Recherche unifiée</h4>
+          <p data-en="Query all Canadian case law &mdash; FR and EN &mdash; ranked by the three scores.">Interrogez toute la jurisprudence canadienne &mdash; FR et EN &mdash; classée par les trois scores.</p>
+        </div>
+        <div class="f11">
+          <span class="f11-sys" data-en="System-wide">Système</span>
+          <div class="f11-top"><span class="f11-num">02</span><span class="f11-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2A44" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="#1F2A44" stroke="none"/></svg></span></div>
+          <h4 data-en="3D Scoring">Scoring 3D</h4>
+          <p data-en="Authority, Relevance and Standing on every ruling &mdash; a verdict in three clear readings.">Autorité, Pertinence et Solidité sur chaque décision &mdash; un verdict en trois lectures claires.</p>
+        </div>
+        <div class="f11">
+          <span class="f11-sys" data-en="System-wide">Système</span>
+          <div class="f11-top"><span class="f11-num">03</span><span class="f11-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2A44" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18 14 14 0 0 1 0-18"/></svg></span></div>
+          <h4 data-en="Bilingual semantics">Sémantique bilingue</h4>
+          <p data-en="Search in one language, find in both &mdash; meaning links civil and common law.">Cherchez dans une langue, trouvez dans les deux &mdash; le sens relie civil et common law.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stratégie -->
+    <div class="grp">
+      <div class="grp-head"><span class="gt" data-en="Strategy">Stratégie</span><span class="gn" data-en="7 features">7 fonctionnalités</span><span class="gl"></span></div>
+      <div class="f11-grid">
+        <div class="f11">
+          <div class="f11-top"><span class="f11-num">04</span><span class="f11-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2A44" stroke-width="1.8"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span></div>
+          <h4 data-en="Reversal detection">Détection de revirements</h4>
+          <p data-en="A continuous watch flags any ruling reversed, distinguished or overruled &mdash; before you cite it.">Une vigie continue signale tout arrêt infirmé, distingué ou renversé &mdash; avant que vous le citiez.</p>
+        </div>
+        <div class="f11">
+          <div class="f11-top"><span class="f11-num">05</span><span class="f11-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2A44" stroke-width="1.8"><path d="M12 3v18M5 7h14M7 7l-3 6a3 3 0 0 0 6 0zM17 7l-3 6a3 3 0 0 0 6 0z"/></svg></span></div>
+          <h4 data-en="Judge profiles">Profil des juges</h4>
+          <p data-en="Know your judge: tendencies, favoured citations and landmark rulings.">Connaissez votre juge : tendances, citations de prédilection et arrêts marquants.</p>
+        </div>
+        <div class="f11">
+          <div class="f11-top"><span class="f11-num">06</span><span class="f11-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2A44" stroke-width="1.8"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M12 7v4m0 0-5 5m5-5 5 5"/></svg></span></div>
+          <h4 data-en="Cartography">Cartographie</h4>
+          <p data-en="See the citation network around a ruling &mdash; who applies, distinguishes or cites it.">Visualisez le réseau de citations autour d'un arrêt &mdash; qui l'applique, le distingue, le cite.</p>
+        </div>
+        <div class="f11">
+          <div class="f11-top"><span class="f11-num">07</span><span class="f11-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2A44" stroke-width="1.8"><path d="M4 6h16M4 11h16M4 16h10M4 21h7"/></svg></span></div>
+          <h4 data-en="Arguments">Argumentaires</h4>
+          <p data-en="Build your plea section by section, each point backed by its sources.">Bâtissez votre plaidoirie section par section, chaque argument appuyé par ses sources.</p>
+        </div>
+        <div class="f11">
+          <div class="f11-top"><span class="f11-num">08</span><span class="f11-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2A44" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg></span></div>
+          <h4 data-en="Smart alerts">Alertes intelligentes</h4>
+          <p data-en="Automatic monitoring alerts you the moment a tracked precedent changes.">Une surveillance automatique vous prévient dès qu'un précédent suivi évolue.</p>
+        </div>
+        <div class="f11">
+          <div class="f11-top"><span class="f11-num">09</span><span class="f11-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2A44" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span></div>
+          <h4 data-en="Matter management">Gestion de dossier</h4>
+          <p data-en="Your matters in one place, each indexed and scored automatically.">Vos dossiers réunis au même endroit, chacun indexé et scoré automatiquement.</p>
+        </div>
+        <div class="f11">
+          <div class="f11-top"><span class="f11-num">11</span><span class="f11-ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F2A44" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span></div>
+          <h4 data-en="Ecosystem">Écosystème</h4>
+          <p data-en="Word, Outlook, Clio &mdash; the intelligence follows you into your tools, no double entry.">Word, Outlook, Clio &mdash; l'intelligence vous suit dans vos outils, sans double saisie.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 SCORES -->
+<section id="scores">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="over sec-tag" data-en="The Docket Nova signature">La signature Docket Nova</div>
+      <h2 data-en="Three independent scores on <i>every</i> ruling.">Trois scores indépendants sur <i>chaque</i> décision.</h2>
+      <p data-en="Not an opaque verdict, but three distinct, explainable readings — shown on every result, every cited case, every alert.">Pas un verdict opaque, mais trois lectures distinctes et explicables — affichées sur chaque résultat, chaque arrêt cité, chaque alerte.</p>
+    </div>
+    <div class="cards3">
+      <div class="card">
+        <div class="ic" style="background:var(--gold-50)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A87E1A" stroke-width="1.9"><path d="M3 21h18M6 21V9l6-5 6 5v12M9 21v-6h6v6"/></svg></div>
+        <div class="num" style="color:var(--gold-700)">88</div>
+        <h3 data-en="Authority">Autorité</h3>
+        <div class="axis" style="color:var(--gold-700)" data-en="The weight of the court">Le poids de la cour</div>
+        <p data-en="Court hierarchy and the reach of the decision. The Supreme Court outweighs a trial court — and the score says so.">La hiérarchie judiciaire et la portée de la décision. La Cour suprême pèse plus qu'un tribunal de première instance — et le score le dit.</p>
+      </div>
+      <div class="card">
+        <div class="ic" style="background:var(--blue-50)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1F4682" stroke-width="1.9"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+        <div class="num" style="color:var(--blue-700)">94</div>
+        <h3 data-en="Relevance">Pertinence</h3>
+        <div class="axis" style="color:var(--blue-700)" data-en="Match to your case">La correspondance au litige</div>
+        <p data-en="Semantic closeness to your matter — beyond keywords. Does the ruling truly address your legal question?">La proximité sémantique avec votre affaire — au-delà des mots-clés. L'arrêt traite-t-il réellement de votre question de droit ?</p>
+      </div>
+      <div class="card">
+        <div class="ic" style="background:var(--green-50)"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2B5C3A" stroke-width="1.9"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <div class="num" style="color:var(--green-700)">41</div>
+        <h3 data-en="Standing">Solidité</h3>
+        <div class="axis" style="color:var(--green-700)" data-en="Does the ruling still hold?">L'arrêt tient-il toujours ?</div>
+        <p data-en="Followed, distinguished, overruled or reversed. A weakened precedent turns red before you cite it by mistake.">Suivi, distingué, infirmé ou renversé. Un précédent affaibli passe au rouge avant que vous ne le citiez par mégarde.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BILINGUE -->
+<section id="bilingue" style="background:var(--parch-100);">
+  <div class="wrap split">
+    <div>
+      <div class="over" data-en="Bilingual semantics">Sémantique bilingue</div>
+      <h2 data-en="Search in French. Find results in <i>English</i> too.">Cherchez en français. Trouvez aussi en <i>anglais</i>.</h2>
+      <p data-en="Canadian law lives in two languages and two traditions. Docket Nova understands meaning, not just words: a civil-law query surfaces the relevant common-law ruling, and vice versa.">Le droit canadien vit en deux langues et deux traditions. Docket Nova comprend le sens, pas seulement les mots : une requête civiliste fait remonter l'arrêt de common law pertinent, et inversement.</p>
+      <ul class="feat-list">
+        <li><span class="ck">✓</span><span data-en="FR and EN results in a single search, ranked by true relevance.">Résultats FR et EN dans une seule recherche, classés par pertinence réelle.</span></li>
+        <li><span class="ck">✓</span><span data-en="Cite a common-law ruling in a civil-law brief without switching tools.">Citez un arrêt de common law dans un mémoire civiliste sans changer d'outil.</span></li>
+        <li><span class="ck">✓</span><span data-en="Equivalent concepts linked across both legal traditions.">Concepts équivalents reliés entre les deux traditions juridiques.</span></li>
+      </ul>
+    </div>
+    <div class="mock">
+      <div class="mock-head">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5A6479" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <span data-en="&ldquo;contractual good faith&rdquo;">« bonne foi contractuelle »</span>
+        <span style="margin-left:auto;font-size:10.5px;color:#2B5FA8" data-en="47 ms · 1,240 rulings">47 ms · 1 240 arrêts</span>
+      </div>
+      <div class="mock-body">
+        <div class="resrow"><div><div class="case">Bhasin v. Hrynew</div><div class="cite">2014 CSC 71</div></div><div class="mini-scores"><span class="pill aut">A 92</span><span class="pill per">P 96</span><span class="pill sol-hi">S 94</span></div></div>
+        <div class="resrow"><div><div class="case">Wastech Services v. Greater Vancouver</div><div class="cite">2021 CSC 7</div></div><div class="mini-scores"><span class="pill aut">A 90</span><span class="pill per">P 88</span><span class="pill sol-hi">S 89</span></div></div>
+        <div class="resrow"><div><div class="case">C.M. Callow Inc. v. Zollinger</div><div class="cite">2020 CSC 45</div></div><div class="mini-scores"><span class="pill aut">A 91</span><span class="pill per">P 84</span><span class="pill sol-hi">S 90</span></div></div>
+        <div style="font-size:12px;color:#5A6479;margin-top:12px;display:flex;align-items:center;gap:8px;">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2B5FA8" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg>
+          <span data-en="Three rulings — civil and common law — surfaced because the meaning matches.">Trois arrêts — civil et common law — remontés parce que le sens correspond.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIREMENTS -->
+<section id="revirements">
+  <div class="wrap split rev">
+    <div>
+      <div class="over" data-en="Reversal detection">Détection de revirements</div>
+      <h2 data-en="Never cite an <i>overturned</i> ruling again.">Ne citez plus jamais un arrêt <i>renversé</i>.</h2>
+      <p data-en="A continuous watch on 247 tracked rulings. The moment a court overrules, distinguishes or reverses a precedent, Docket Nova flags it — and points you to the authority that takes over.">Une vigie continue sur 247 décisions suivies. Dès qu'une cour infirme, distingue ou renverse un précédent, Docket Nova le signale — et vous propose l'autorité qui prend le relais.</p>
+      <ul class="feat-list">
+        <li><span class="ck">✓</span><span data-en="Alerted the moment a ruling's standing changes.">Alerte au moment où la solidité d'un arrêt change.</span></li>
+        <li><span class="ck">✓</span><span data-en="Pre-built rebuttal to opposing counsel's argument.">Réplique pré-construite à l'argument de la partie adverse.</span></li>
+        <li><span class="ck">✓</span><span data-en="Direct link to the decision that now governs.">Lien direct vers la décision qui fait désormais autorité.</span></li>
+      </ul>
+    </div>
+    <div class="mock" style="padding:18px;">
+      <div class="rev-card">
+        <div class="rev-top">
+          <div class="rev-strike">Gagnon c. Cie ABC</div>
+          <div class="cite" style="margin-top:4px;" data-en="2011 ONCA 318 · cited by opposing counsel">2011 ONCA 318 · invoqué par la partie adverse</div>
+          <div class="rev-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M12 9v4m0 4h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+            <span data-en="Standing 54 → 41 · distinguished">Solidité 54 → 41 · distingué</span>
+          </div>
+        </div>
+        <div class="rev-bot">
+          <div class="lab" data-en="✓ Authority that takes over">✓ Autorité qui prend le relais</div>
+          <div class="rev-new">Lemieux c. Groupe Renaud</div>
+          <div class="cite" style="margin-top:4px;" data-en="2022 ONCA 1140 · Standing 88">2022 ONCA 1140 · Solidité 88</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IA / RESPONSIBLE AI -->
+<section id="ia" class="ai">
+  <div class="wrap ai-grid">
+    <div>
+      <div class="over" data-en="Responsible AI">L'IA responsable</div>
+      <h2 data-en="AI that argues <i>with</i> you — never for you.">Une IA qui plaide <i>avec</i> vous — jamais à votre place.</h2>
+      <p class="lede" data-en="Docket Nova drafts, summarizes and answers in plain language. But every claim is anchored in real case law, every citation links to its source, and the final call is always yours.">Docket Nova rédige, résume et répond en langage clair. Mais chaque affirmation est ancrée dans la jurisprudence réelle, chaque citation renvoie à sa source, et la décision finale vous revient toujours.</p>
+      <ul class="principles">
+        <li>
+          <span class="pn">01</span>
+          <div>
+            <div class="pt" data-en="Grounded in real case law">Ancrée dans la jurisprudence réelle</div>
+            <div class="pd" data-en="Every answer draws on indexed decisions, not a language model's memory — so it cannot drift into plausible-sounding fiction.">Chaque réponse s'appuie sur des décisions indexées, pas sur la mémoire d'un modèle — elle ne peut donc pas dériver vers une fiction plausible.</div>
+          </div>
+        </li>
+        <li>
+          <span class="pn">02</span>
+          <div>
+            <div class="pt" data-en="Always cites its sources">Cite toujours ses sources</div>
+            <div class="pd" data-en="No invented citations. Every case the assistant mentions is clickable, verifiable, and carries its own three scores.">Aucune citation inventée. Chaque arrêt mentionné par l'assistant est cliquable, vérifiable, et porte ses propres trois scores.</div>
+          </div>
+        </li>
+        <li>
+          <span class="pn">03</span>
+          <div>
+            <div class="pt" data-en="You keep the decision">Vous gardez la décision</div>
+            <div class="pd" data-en="The AI proposes; the lawyer decides. Nothing is filed without your review and sign-off.">L'IA propose, l'avocat dispose. Rien n'est déposé sans votre relecture et votre validation.</div>
+          </div>
+        </li>
+      </ul>
+      <div class="ai-note"><span class="dot"></span><span data-en="State-of-the-art models, hosted in Canada — no retention, no training on your data.">Modèles de pointe, hébergés au Canada — sans rétention ni entraînement sur vos données.</span></div>
+    </div>
+    <!-- assistant chat mock -->
+    <div class="chat">
+      <div class="chat-head">
+        <svg width="22" height="22" viewBox="0 0 64 64" fill="none"><path d="M32 8 Q35 27 50 30 Q35 33 32 52 Q29 33 14 30 Q29 27 32 8 Z" fill="#E8C56C"/></svg>
+        <div style="flex:1"><div class="nm">Docket <i style="font-style:italic;color:#E8C56C">Nova</i></div><div class="st" data-en="Legal assistant · sources cited">Assistant juridique · sources citées</div></div>
+      </div>
+      <div class="chat-body">
+        <div class="bubble user" data-en="Is the good-faith obligation enforceable at the contract-formation stage?">L'obligation de bonne foi est-elle applicable au stade de la formation du contrat ?</div>
+        <div class="bubble ai">
+          <span data-en="Yes. The Supreme Court recognized a general organizing principle of good faith in <i>Bhasin</i>, later extended to active dishonesty during performance in <i>Callow</i>. Two anchoring authorities:">Oui. La Cour suprême a reconnu un principe directeur général de bonne foi dans <i>Bhasin</i>, étendu à la malhonnêteté active en cours d'exécution dans <i>Callow</i>. Deux autorités d'ancrage :</span>
+          <div class="src">
+            <div class="src-chip"><span class="ci">Bhasin v. Hrynew</span><span class="vp" data-en="Standing 94">Solidité 94</span><span class="cc">2014 CSC 71</span></div>
+            <div class="src-chip"><span class="ci">C.M. Callow Inc. v. Zollinger</span><span class="vp" data-en="Standing 90">Solidité 90</span><span class="cc">2020 CSC 45</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REDACTION -->
+<section id="redaction">
+  <div class="wrap split">
+    <div>
+      <div class="over" data-en="Assisted drafting">Rédaction assistée</div>
+      <h2 data-en="Draft motions, briefs and appeals — <i>inside</i> the tool.">Rédigez requêtes, mémoires et appels — <i>dans</i> l'outil.</h2>
+      <p data-en="Docket Nova isn't only for searching. Start from a ready template, build your argument section by section, and let the assistant suggest authorities — each one already scored and checked for reversals.">Docket Nova ne sert pas qu'à chercher. Partez d'un modèle prêt, construisez votre argument section par section, et laissez l'assistant proposer des autorités — chacune déjà scorée et vérifiée contre les revirements.</p>
+      <ul class="feat-list">
+        <li><span class="ck">✓</span><span data-en="Ready templates: Motion, Brief, Appeal — formatted for court.">Modèles prêts : Requête, Mémoire, Mémoire d'appel — mis en forme pour la cour.</span></li>
+        <li><span class="ck">✓</span><span data-en="Structured outline on the left, rich drafting on the right.">Plan structuré à gauche, rédaction enrichie à droite.</span></li>
+        <li><span class="ck">✓</span><span data-en="The AI proposes an argument; you keep the pen.">L'IA propose un argument; vous gardez la plume.</span></li>
+        <li><span class="ck">✓</span><span data-en="Every ruling you insert is scored and checked for reversals.">Chaque arrêt inséré est scoré et vérifié.</span></li>
+      </ul>
+    </div>
+    <div class="mock">
+      <div class="mock-head"><span data-en="Motion · Dupont v. Industries XYZ">Requête · Dupont c. Industries XYZ</span><span style="margin-left:auto;color:#3D7A4E;display:inline-flex;align-items:center;gap:6px;"><span style="width:6px;height:6px;border-radius:50%;background:#3D7A4E;"></span><span data-en="Saved">Enregistré</span></span></div>
+      <div style="display:grid;grid-template-columns:128px 1fr;">
+        <div class="doc-out">
+          <div class="oi"><span class="od" style="background:#3D7A4E"></span><span data-en="Opening">Ouverture</span></div>
+          <div class="oi"><span class="od" style="background:#3D7A4E"></span><span data-en="Facts">Trame factuelle</span></div>
+          <div class="oi"><span class="od" style="background:#C8941F"></span><span data-en="Applicable law">Droit applicable</span></div>
+          <div class="oi"><span class="od" style="background:#C8941F"></span><span data-en="Argument 1">Argument 1</span></div>
+          <div class="oi"><span class="od" style="background:#B3BCCB"></span><span data-en="Argument 2">Argument 2</span></div>
+          <div class="oi"><span class="od" style="background:#B3BCCB"></span><span data-en="Conclusion">Conclusion</span></div>
+        </div>
+        <div style="padding:22px 24px;">
+          <div style="text-align:center;font-family:var(--fd);font-weight:600;letter-spacing:.16em;font-size:13px;color:var(--ink-700);" data-en="MOTION">REQUÊTE</div>
+          <div style="height:1px;background:var(--ink-100);margin:14px 0;"></div>
+          <div style="display:flex;flex-direction:column;gap:9px;">
+            <div style="height:9px;background:var(--ink-100);border-radius:3px;width:100%;"></div>
+            <div style="height:9px;background:var(--ink-100);border-radius:3px;width:94%;"></div>
+            <div style="height:9px;background:var(--ink-100);border-radius:3px;width:78%;"></div>
+          </div>
+          <div class="ai-suggest">
+            <svg width="16" height="16" viewBox="0 0 64 64" fill="none" style="flex:none;margin-top:1px;"><path d="M32 8 Q35 27 50 30 Q35 33 32 52 Q29 33 14 30 Q29 27 32 8 Z" fill="#C8941F"/></svg>
+            <div class="txt" data-en="<b>AI suggestion</b> — cite <i>Bhasin v. Hrynew</i> on the good-faith principle (Standing 94)."><b>Suggestion IA</b> — citer <i>Bhasin v. Hrynew</i> sur le principe de bonne foi (Solidité 94).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATIONS -->
+<section id="integrations">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="over sec-tag" data-en="Connected ecosystem">Écosystème connecté</div>
+      <h2 data-en="Where you <i>already</i> work.">Là où vous travaillez <i>déjà</i>.</h2>
+      <p data-en="You can do everything inside Docket Nova. And when you'd rather stay in your usual tools, the intelligence follows you there — no double entry, no leaving the document.">Vous pouvez tout faire dans Docket Nova. Et quand vous préférez vos outils habituels, l'intelligence vous y accompagne — sans double saisie, sans quitter le document.</p>
+    </div>
+    <div class="integ">
+      <div class="it">
+        <div class="ico" style="background:#2B5FA8">W</div>
+        <h4>Microsoft Word</h4>
+        <p data-en="A pane inside Word that scans your document's citations and flags any overturned ruling live — with a one-click reply or missing authority to insert.">Un volet dans Word qui analyse les citations de votre document et signale en direct tout arrêt renversé — avec la réplique ou l'autorité manquante à insérer en un clic.</p>
+      </div>
+      <div class="it">
+        <div class="ico" style="background:#0F6CBD">O</div>
+        <h4>Outlook</h4>
+        <p data-en="Your hearings on the calendar, each with a ready brief: sources, anticipated rebuttal, judge profile.">Vos audiences au calendrier, chacune accompagnée d'un mémoire prêt : sources, réplique anticipée, profil du juge.</p>
+      </div>
+      <div class="it">
+        <div class="ico" style="background:#7A1F2B">C</div>
+        <h4>Clio &amp; JurisConcept</h4>
+        <p data-en="Open a matter; within a minute it's indexed, scored, and relevant precedents are waiting.">Ouvrez un dossier ; en une minute il est indexé, scoré, et les précédents pertinents vous attendent.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONFORMITE -->
+<section id="conformite" style="background:var(--parch-100);">
+  <div class="wrap">
+    <div class="comply">
+      <div class="over" data-en="Security &amp; compliance">Sécurité &amp; conformité</div>
+      <h2 data-en="Your data stays <i>in Canada</i>.">Vos données restent <i>au Canada</i>.</h2>
+      <p class="sub" data-en="Solicitor-client privilege is not negotiable. Docket Nova is built to protect it at every layer — from hosting to the AI model.">Le secret professionnel n'est pas négociable. Docket Nova est conçu pour le respecter à chaque couche — de l'hébergement au modèle d'IA.</p>
+      <div class="comply-grid">
+        <div class="c"><span class="k" data-en="Residency">Résidence</span><div class="t" data-en="Hosted in Canada">Hébergé au Canada</div><div class="d" data-en="Your matters and queries are processed and stored in Canadian data centres. Nothing leaves the country.">Vos dossiers et requêtes sont traités et stockés dans des centres de données canadiens. Rien ne quitte le pays.</div></div>
+        <div class="c"><span class="k" data-en="Legal framework">Cadre légal</span><div class="t">PIPEDA</div><div class="d" data-en="Built to Canadian federal personal-information requirements.">Conçu selon les exigences fédérales canadiennes en matière de renseignements personnels.</div></div>
+        <div class="c"><span class="k" data-en="AI confidentiality">Confidentialité IA</span><div class="t" data-en="Zero training">Zéro entraînement</div><div class="d" data-en="None of your data trains our models. Zero-retention agreements with our AI providers.">Aucune de vos données n'entraîne nos modèles. Ententes de zéro-rétention avec nos fournisseurs d'IA.</div></div>
+        <div class="c"><span class="k" data-en="Encryption">Chiffrement</span><div class="t" data-en="At rest and in transit">Au repos et en transit</div><div class="d" data-en="End-to-end encryption and strict secret management for every exchange.">Chiffrement de bout en bout et gestion stricte des secrets pour chaque échange.</div></div>
+        <div class="c"><span class="k" data-en="Traceability">Traçabilité</span><div class="t" data-en="Sources always cited">Sources toujours citées</div><div class="d" data-en="Every answer is grounded in real case law, with a link to the decision. No invented citations.">Chaque réponse est ancrée dans la jurisprudence réelle, avec un lien vers la décision. Aucune citation inventée.</div></div>
+        <div class="c"><span class="k" data-en="Control">Contrôle</span><div class="t" data-en="You decide">Vous décidez</div><div class="d" data-en="Role-based access, audit logs and deletion on request. The firm stays in charge.">Accès par rôle, journaux d'audit et suppression sur demande. Le cabinet garde la main.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final" id="demo">
+  <div class="wrap">
+    <h2 data-en="See Docket Nova on <i>your own</i> matters.">Voyez Docket Nova sur <i>vos propres</i> dossiers.</h2>
+    <p data-en="A 30-minute walkthrough tailored to your practice. No credit card, no commitment.">Une démonstration de 30 minutes, adaptée à votre pratique. Aucune carte de crédit, aucun engagement.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+      <a class="btn btn-primary" href="#demo" data-en="Request a demo →">Demander une démo →</a>
+      <a class="btn btn-ghost" href="index.html" data-en="Explore the prototype">Explorer le prototype</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand" style="gap:10px;">
+          <svg width="28" height="28" viewBox="0 0 64 64" fill="none">
+            <rect x="11.5" y="43.5" width="41" height="2.4" rx="1.2" fill="#FBF8F2"/>
+            <rect x="11.5" y="50" width="32" height="2.4" rx="1.2" fill="#46506A"/>
+            <rect x="11.5" y="56.4" width="25.6" height="2.4" rx="1.2" fill="#46506A"/>
+            <path d="M32 5 Q35.5 25 52 29 Q35.5 33 32 53 Q28.5 33 12 29 Q28.5 25 32 5 Z" fill="#E8C56C"/>
+            <circle cx="47.5" cy="14.5" r="1.9" fill="#E5A8B1"/>
+            <circle cx="18" cy="19.5" r="1.3" fill="#E5A8B1"/>
+          </svg>
+          <span class="wm">Docket <i>Nova</i></span>
+        </div>
+        <p data-en="The intelligence of Canadian case law. Read, weighed and cited — in both languages.">L'intelligence de la jurisprudence canadienne. Lue, pesée et citée — dans les deux langues.</p>
+      </div>
+      <div class="foot-col">
+        <h5 data-en="Product">Produit</h5>
+        <a href="#scores" data-en="3D Scoring">Le Scoring 3D</a>
+        <a href="#bilingue" data-en="Bilingual search">Recherche bilingue</a>
+        <a href="#ia" data-en="AI assistant">Assistant IA</a>
+        <a href="#redaction" data-en="Document drafting">Rédaction de documents</a>
+        <a href="#fonctionnalites" data-en="The 11 features">Les 11 fonctionnalités</a>
+        <a href="#integrations" data-en="Integrations">Intégrations</a>
+      </div>
+      <div class="foot-col">
+        <h5 data-en="Firm">Cabinet</h5>
+        <a href="#demo" data-en="Request a demo">Demander une démo</a>
+        <a href="index.html" data-en="Sign in">Se connecter</a>
+        <a href="#conformite" data-en="Security">Sécurité</a>
+        <a href="#" data-en="Pricing">Tarifs</a>
+      </div>
+      <div class="foot-col">
+        <h5 data-en="Legal">Légal</h5>
+        <a href="#conformite" data-en="PIPEDA compliance">Conformité PIPEDA</a>
+        <a href="#" data-en="Privacy">Confidentialité</a>
+        <a href="#" data-en="Terms">Conditions</a>
+        <a href="#" data-en="Contact us">Nous joindre</a>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 Docket Nova</span>
+      <span style="display:inline-flex;align-items:center;gap:7px;"><span style="width:6px;height:6px;border-radius:50%;background:#3D7A4E;"></span><span data-en="Data hosted in Canada · PIPEDA compliant">Données hébergées au Canada · Conforme à la PIPEDA</span></span>
+    </div>
+  </div>
+</footer>
+
+<!-- MODAL DÉMO -->
+<div class="modal-overlay" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="mh-title" id="modalTitle">Demander une <i>démo</i></div>
+      <button class="modal-close" id="modalClose" aria-label="Fermer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Choix du type -->
+      <div class="type-toggle" id="typeToggle">
+        <button class="type-btn sel" data-type="entreprise" type="button">
+          <span class="tb-label">Entreprise</span>
+          <span class="tb-desc">Cabinet, firme ou organisation</span>
+          <span class="tb-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>
+        </button>
+        <button class="type-btn" data-type="personnel" type="button">
+          <span class="tb-label">Personnel</span>
+          <span class="tb-desc">Avocat ou juriste individuel</span>
+          <span class="tb-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>
+        </button>
+        <button class="type-btn" data-type="universite" type="button">
+          <span class="tb-label">Université</span>
+          <span class="tb-desc">Étudiant ou professeur en droit</span>
+          <span class="tb-check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span>
+        </button>
+      </div>
+
+      <!-- Formulaire -->
+      <form id="demoForm" novalidate>
+        <div class="form-fields">
+          <div class="field-row">
+            <div class="field">
+              <label for="f-nom">Nom complet <span style="color:var(--oxblood)">*</span></label>
+              <input id="f-nom" name="nom" type="text" placeholder="Jean Dupont" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="f-email">Courriel <span style="color:var(--oxblood)">*</span></label>
+              <input id="f-email" name="email" type="email" placeholder="jean@cabinet.ca" autocomplete="email" required>
+            </div>
+          </div>
+          <div class="field" id="field-org">
+            <label for="f-org">Organisation <span class="field-optional">(optionnel)</span></label>
+            <input id="f-org" name="organisation" type="text" placeholder="Cabinet Dupont & Associés">
+          </div>
+          <div class="field" id="field-role" style="display:none">
+            <label for="f-role">Rôle <span class="field-optional">(optionnel)</span></label>
+            <select id="f-role" name="role">
+              <option value="">-- Choisir --</option>
+              <option value="etudiant">Étudiant(e)</option>
+              <option value="professeur">Professeur(e)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-tel">Téléphone <span class="field-optional">(optionnel)</span></label>
+            <input id="f-tel" name="telephone" type="tel" placeholder="+1 514 555-0100" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="f-msg">Message <span class="field-optional">(optionnel)</span></label>
+            <textarea id="f-msg" name="message" placeholder="Décrivez votre pratique ou vos questions..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <p class="privacy">Données hébergées au Canada · Jamais revendues</p>
+          <button class="btn-submit" type="submit" id="btnSubmit">Envoyer la demande</button>
+        </div>
+      </form>
+
+      <!-- Succès -->
+      <div class="modal-success" id="demoSuccess" style="display:none">
+        <div class="ms-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#3D7A4E" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h3>Demande reçue !</h3>
+        <p>Nous vous contacterons dans les 24 heures pour planifier votre démonstration personnalisée.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var els = Array.prototype.slice.call(document.querySelectorAll('[data-en]'));
+  var frCache = new Map();
+  els.forEach(function(el){ frCache.set(el, el.innerHTML); });
+  var btns = document.querySelectorAll('.lang button');
+
+  function setLang(l){
+    document.documentElement.lang = l;
+    els.forEach(function(el){
+      el.innerHTML = (l === 'en') ? el.getAttribute('data-en') : frCache.get(el);
+    });
+    btns.forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-lang') === l); });
+    try{ localStorage.setItem('dn_lang', l); }catch(e){}
+  }
+
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){ setLang(b.getAttribute('data-lang')); });
+  });
+
+  var saved = 'fr';
+  try{ saved = localStorage.getItem('dn_lang') || 'fr'; }catch(e){}
+  if(saved === 'en') setLang('en');
+})();
+
+// MODAL DÉMO
+(function(){
+  var overlay = document.getElementById('demoModal');
+  var form = document.getElementById('demoForm');
+  var success = document.getElementById('demoSuccess');
+  var btnSubmit = document.getElementById('btnSubmit');
+  var typeToggle = document.getElementById('typeToggle');
+  var selectedType = 'entreprise';
+  var currentLang = 'fr';
+
+  var labels = {
+    fr: {
+      title: 'Demander une <i>démo</i>',
+      close: 'Fermer',
+      entreprise: 'Entreprise', entrepriseDesc: 'Cabinet, firme ou organisation',
+      personnel: 'Personnel', personnelDesc: 'Avocat ou juriste individuel',
+      universite: 'Université', universiteDesc: 'Étudiant ou professeur en droit',
+      role: 'Rôle', rolePh: '-- Choisir --', roleEtudiant: 'Étudiant(e)', roleProfesseur: 'Professeur(e)',
+      nom: 'Nom complet', nomPh: 'Jean Dupont',
+      email: 'Courriel', emailPh: 'jean@cabinet.ca',
+      org: 'Organisation', orgPh: 'Cabinet Dupont & Associés',
+      tel: 'Téléphone', telPh: '+1 514 555-0100',
+      msg: 'Message', msgPh: 'Décrivez votre pratique ou vos questions...',
+      privacy: 'Données hébergées au Canada · Jamais revendues',
+      submit: 'Envoyer la demande', submitting: 'Envoi...',
+      successTitle: 'Demande reçue !',
+      successMsg: 'Nous vous contacterons dans les 24 heures pour planifier votre démonstration personnalisée.',
+      optional: '(optionnel)'
+    },
+    en: {
+      title: 'Request a <i>demo</i>',
+      close: 'Close',
+      entreprise: 'Enterprise', entrepriseDesc: 'Firm or organization',
+      personnel: 'Individual', personnelDesc: 'Solo lawyer or jurist',
+      universite: 'University', universiteDesc: 'Law student or professor',
+      role: 'Role', rolePh: '-- Select --', roleEtudiant: 'Student', roleProfesseur: 'Professor',
+      nom: 'Full name', nomPh: 'Jane Smith',
+      email: 'Email', emailPh: 'jane@firm.ca',
+      org: 'Organization', orgPh: 'Smith & Associates',
+      tel: 'Phone', telPh: '+1 514 555-0100',
+      msg: 'Message', msgPh: 'Describe your practice or questions...',
+      privacy: 'Data hosted in Canada · Never sold',
+      submit: 'Send request', submitting: 'Sending...',
+      successTitle: 'Request received!',
+      successMsg: 'We will contact you within 24 hours to schedule your personalized demo.',
+      optional: '(optional)'
+    }
+  };
+
+  function openModal(){
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    form.style.display = '';
+    success.style.display = 'none';
+    form.reset();
+    btnSubmit.disabled = false;
+    applyLang();
+  }
+
+  function closeModal(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function applyLang(){
+    var l = labels[currentLang] || labels.fr;
+    document.getElementById('modalTitle').innerHTML = l.title;
+    document.getElementById('modalClose').setAttribute('aria-label', l.close);
+    document.querySelector('[data-type="entreprise"] .tb-label').textContent = l.entreprise;
+    document.querySelector('[data-type="entreprise"] .tb-desc').textContent = l.entrepriseDesc;
+    document.querySelector('[data-type="personnel"] .tb-label').textContent = l.personnel;
+    document.querySelector('[data-type="personnel"] .tb-desc').textContent = l.personnelDesc;
+    document.querySelector('[data-type="universite"] .tb-label').textContent = l.universite;
+    document.querySelector('[data-type="universite"] .tb-desc').textContent = l.universiteDesc;
+    document.querySelector('label[for="f-role"]').childNodes[0].textContent = l.role + ' ';
+    var roleEl = document.getElementById('f-role');
+    roleEl.options[0].text = l.rolePh;
+    roleEl.options[1].text = l.roleEtudiant;
+    roleEl.options[2].text = l.roleProfesseur;
+    document.querySelector('label[for="f-nom"]').childNodes[0].textContent = l.nom + ' ';
+    document.getElementById('f-nom').placeholder = l.nomPh;
+    document.querySelector('label[for="f-email"]').childNodes[0].textContent = l.email + ' ';
+    document.getElementById('f-email').placeholder = l.emailPh;
+    document.querySelector('label[for="f-org"]').childNodes[0].textContent = l.org + ' ';
+    document.querySelector('label[for="f-org"] .field-optional').textContent = l.optional;
+    document.getElementById('f-org').placeholder = l.orgPh;
+    document.querySelector('label[for="f-tel"]').childNodes[0].textContent = l.tel + ' ';
+    document.getElementById('f-tel').placeholder = l.telPh;
+    document.querySelector('label[for="f-msg"]').childNodes[0].textContent = l.msg + ' ';
+    document.getElementById('f-msg').placeholder = l.msgPh;
+    document.querySelector('.modal-footer .privacy').textContent = l.privacy;
+    btnSubmit.textContent = l.submit;
+    document.querySelector('.modal-success h3').textContent = l.successTitle;
+    document.querySelector('.modal-success p').textContent = l.successMsg;
+  }
+
+  // Sync langue avec le toggle principal
+  document.querySelectorAll('.lang button').forEach(function(b){
+    b.addEventListener('click', function(){
+      currentLang = b.getAttribute('data-lang');
+      if(overlay.classList.contains('open')) applyLang();
+    });
+  });
+  try{ currentLang = localStorage.getItem('dn_lang') || 'fr'; }catch(e){}
+
+  // Ouvrir le modal sur tous les liens #demo
+  document.querySelectorAll('a[href="#demo"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      openModal();
+    });
+  });
+
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeModal(); });
+
+  // Type toggle
+  function updateFieldVisibility(){
+    document.getElementById('field-role').style.display = (selectedType === 'universite') ? '' : 'none';
+  }
+
+  typeToggle.querySelectorAll('.type-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      typeToggle.querySelectorAll('.type-btn').forEach(function(b){ b.classList.remove('sel'); });
+      btn.classList.add('sel');
+      selectedType = btn.getAttribute('data-type');
+      updateFieldVisibility();
+    });
+  });
+
+  // Soumission
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var nom = document.getElementById('f-nom').value.trim();
+    var email = document.getElementById('f-email').value.trim();
+    if(!nom || !email) return;
+
+    btnSubmit.disabled = true;
+    btnSubmit.textContent = (labels[currentLang] || labels.fr).submitting;
+
+    var payload = {
+      type: selectedType,
+      nom: nom,
+      email: email,
+      organisation: document.getElementById('f-org').value.trim(),
+      telephone: document.getElementById('f-tel').value.trim(),
+      message: document.getElementById('f-msg').value.trim(),
+      role: document.getElementById('f-role').value,
+      langue: currentLang
+    };
+
+    fetch('/api/demo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if(data.ok){
+        form.style.display = 'none';
+        success.style.display = '';
+      } else {
+        btnSubmit.disabled = false;
+        btnSubmit.textContent = (labels[currentLang] || labels.fr).submit;
+        alert(data.error || 'Erreur.');
+      }
+    })
+    .catch(function(){
+      btnSubmit.disabled = false;
+      btnSubmit.textContent = (labels[currentLang] || labels.fr).submit;
+      alert('Erreur de connexion. Veuillez réessayer.');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

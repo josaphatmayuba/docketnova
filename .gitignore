@@ -1,0 +1,17 @@
+# Environnement
+deploy/.env
+deploy/web/html/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Clés SSH / PEM
+*.pem
+
+# Logs
+*.log

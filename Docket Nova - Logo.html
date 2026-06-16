@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docket Nova — Logo · Kit</title>
+<link rel="icon" type="image/svg+xml" href="brand/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-950:#07101F; --ink-900:#0E1626; --ink-700:#1F2A44; --ink-500:#5A6479; --ink-300:#B3BCCB; --ink-100:#E7EBF1;
+    --parch-50:#FBF8F2; --parch-100:#F5EFE2; --parch-200:#ECE3CE;
+    --paper:#FFFFFF; --oxblood:#7A1F2B; --gold:#C8941F; --gold-300:#E8C56C; --rose:#E5A8B1;
+    --blue:#2B5FA8; --green:#3D7A4E;
+    --fd:'Newsreader',Georgia,serif; --fm:'JetBrains Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--parch-50); color:var(--ink-900); font-family:var(--fd); -webkit-font-smoothing:antialiased; line-height:1.5;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 40px;}
+
+  header{padding:90px 0 56px; border-bottom:1px solid var(--parch-200);}
+  .eyebrow{font-family:var(--fm); font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--oxblood); margin-bottom:22px;}
+  header h1{font-size:56px; font-weight:500; letter-spacing:-.025em; line-height:1.06;}
+  header h1 em{font-style:italic; color:var(--oxblood);}
+  header p{font-size:18px; color:var(--ink-500); max-width:56ch; margin-top:22px; line-height:1.6;}
+
+  section{padding:64px 0; border-bottom:1px solid var(--parch-200);}
+  .sec-head{display:flex; align-items:baseline; gap:16px; margin-bottom:40px;}
+  .sec-num{font-family:var(--fm); font-size:13px; color:var(--ink-300);}
+  .sec-title{font-size:28px; font-weight:500; letter-spacing:-.02em;}
+  .sec-desc{font-size:15px; color:var(--ink-500); max-width:46ch; margin-left:auto; text-align:right;}
+
+  /* hero lockup display */
+  .hero-lockup{background:var(--paper); border:1px solid var(--parch-200); border-radius:16px; padding:80px; display:flex; justify-content:center;}
+  .lockup{display:flex; align-items:center; gap:22px;}
+  .wm{font-family:var(--fd); font-weight:500; letter-spacing:-.02em; line-height:1; font-size:52px;}
+  .wm em{font-style:italic;}
+  .stack{display:flex; flex-direction:column; gap:8px;}
+  .tag{font-family:var(--fm); font-size:11px; letter-spacing:.28em; text-transform:uppercase; color:var(--ink-300);}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .tile{border-radius:14px; padding:44px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px; min-height:200px;}
+  .tile.light{background:var(--paper); border:1px solid var(--parch-200);}
+  .tile.parch{background:var(--parch-100); border:1px solid var(--parch-200);}
+  .tile.ink{background:var(--ink-950);}
+  .tile.ox{background:var(--oxblood);}
+  .cap{font-family:var(--fm); font-size:10.5px; letter-spacing:.13em; text-transform:uppercase;}
+  .light .cap,.parch .cap{color:var(--ink-300);} .ink .cap,.ox .cap{color:rgba(251,248,242,.5);}
+
+  /* clearspace */
+  .clear-stage{background:var(--paper); border:1px solid var(--parch-200); border-radius:14px; padding:50px; display:flex; gap:50px; align-items:center; flex-wrap:wrap; justify-content:center;}
+  .clearbox{position:relative; padding:40px; outline:1px dashed var(--ink-300);}
+  .clearbox::before{content:''; position:absolute; inset:0; border:40px solid rgba(122,31,43,.05);}
+
+  .favrow{display:flex; align-items:flex-end; gap:26px; flex-wrap:wrap;}
+  .fav{display:flex; flex-direction:column; align-items:center; gap:10px;}
+  .fav .lbl{font-family:var(--fm); font-size:10px; color:var(--ink-300);}
+
+  .meta-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .card{background:var(--paper); border:1px solid var(--parch-200); border-radius:12px; padding:28px;}
+  .card h4{font-family:var(--fm); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--oxblood); margin-bottom:18px;}
+  .sw{display:flex; align-items:center; gap:13px; font-size:14px; padding:5px 0;}
+  .sw .chip{width:30px; height:30px; border-radius:7px; border:1px solid rgba(0,0,0,.08); flex:none;}
+  .sw .nm{font-weight:500;} .sw .hex{font-family:var(--fm); font-size:12px; color:var(--ink-500); margin-left:auto;}
+
+  .dos{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+  .do{background:var(--paper); border:1px solid var(--parch-200); border-radius:12px; padding:28px;}
+  .do .h{display:flex; align-items:center; gap:10px; font-family:var(--fm); font-size:11px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:16px;}
+  .do.good .h{color:var(--green);} .do.bad .h{color:var(--oxblood);}
+  .do ul{list-style:none; display:flex; flex-direction:column; gap:9px;}
+  .do li{font-size:14.5px; color:var(--ink-700); padding-left:20px; position:relative; line-height:1.4;}
+  .do li::before{position:absolute; left:0; top:0;}
+  .do.good li::before{content:'✓'; color:var(--green);}
+  .do.bad li::before{content:'✕'; color:var(--oxblood);}
+
+  .files{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:8px;}
+  .file{display:flex; align-items:center; gap:12px; background:var(--paper); border:1px solid var(--parch-200); border-radius:9px; padding:13px 16px; font-size:14px;}
+  .file .ext{font-family:var(--fm); font-size:10px; font-weight:500; padding:3px 7px; border-radius:5px; background:var(--parch-100); color:var(--ink-500); letter-spacing:.05em;}
+  .file .nm{color:var(--ink-700);} .file .sz{font-family:var(--fm); font-size:11px; color:var(--ink-300); margin-left:auto;}
+
+  footer{padding:56px 0 90px; color:var(--ink-500); font-size:14px;}
+  footer .rec{font-family:var(--fd); font-size:19px; color:var(--ink-900); margin-bottom:8px; font-weight:500;}
+  footer em{font-style:italic; color:var(--oxblood);}
+
+  @media(max-width:920px){ .grid2,.grid3,.meta-grid,.dos,.files{grid-template-columns:1fr;} header h1{font-size:38px;} .wm{font-size:38px;} .sec-desc{display:none;} .hero-lockup{padding:48px 24px;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Logo · Kit de marque · Direction 02</div>
+    <h1>L'Étoile <em>levante</em>.</h1>
+    <p>La nova se lève au-dessus des lignes du rôle judiciaire — le savoir qui s'éclaire, l'intelligence qui émerge du registre. Voici le système complet : symbole, lockup, déclinaisons, règles d'usage et fichiers prêts à l'emploi.</p>
+  </div>
+</header>
+
+<!-- PRIMARY LOCKUP -->
+<section>
+  <div class="wrap">
+    <div class="hero-lockup">
+      <div class="lockup">
+        <svg width="108" height="108" viewBox="0 0 100 100">
+          <rect x="18" y="68" width="64" height="3.4" rx="1.7" fill="#1F2A44"/>
+          <rect x="18" y="78" width="50" height="3.4" rx="1.7" fill="#B3BCCB"/>
+          <rect x="18" y="88" width="40" height="3.4" rx="1.7" fill="#B3BCCB"/>
+          <path d="M50 10 Q55 40 80 45 Q55 50 50 80 Q45 50 20 45 Q45 40 50 10 Z" fill="#7A1F2B"/>
+          <circle cx="74" cy="22" r="3" fill="#C8941F"/>
+          <circle cx="28" cy="30" r="2" fill="#C8941F"/>
+        </svg>
+        <div class="stack">
+          <div class="wm">Docket <em>Nova</em></div>
+          <div class="tag">Le rôle, éclairé</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VARIANTS -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">01</span><span class="sec-title">Le symbole</span>
+      <span class="sec-desc">Couleur de marque, accent or sur fond sombre, et monochrome pour la gravure ou le fax.</span>
+    </div>
+    <div class="grid3">
+      <div class="tile parch">
+        <svg width="92" height="92" viewBox="0 0 100 100"><rect x="18" y="68" width="64" height="3.4" rx="1.7" fill="#1F2A44"/><rect x="18" y="78" width="50" height="3.4" rx="1.7" fill="#B3BCCB"/><rect x="18" y="88" width="40" height="3.4" rx="1.7" fill="#B3BCCB"/><path d="M50 10 Q55 40 80 45 Q55 50 50 80 Q45 50 20 45 Q45 40 50 10 Z" fill="#7A1F2B"/><circle cx="74" cy="22" r="3" fill="#C8941F"/><circle cx="28" cy="30" r="2" fill="#C8941F"/></svg>
+        <div class="cap">Primaire · oxblood</div>
+      </div>
+      <div class="tile ink">
+        <svg width="92" height="92" viewBox="0 0 100 100"><rect x="18" y="68" width="64" height="3.4" rx="1.7" fill="#FBF8F2"/><rect x="18" y="78" width="50" height="3.4" rx="1.7" fill="#46506A"/><rect x="18" y="88" width="40" height="3.4" rx="1.7" fill="#46506A"/><path d="M50 10 Q55 40 80 45 Q55 50 50 80 Q45 50 20 45 Q45 40 50 10 Z" fill="#E8C56C"/><circle cx="74" cy="22" r="3" fill="#E5A8B1"/><circle cx="28" cy="30" r="2" fill="#E5A8B1"/></svg>
+        <div class="cap">Inversé · accent or</div>
+      </div>
+      <div class="tile light">
+        <svg width="92" height="92" viewBox="0 0 100 100"><rect x="18" y="68" width="64" height="3.4" rx="1.7" fill="#0E1626"/><rect x="18" y="78" width="50" height="3.4" rx="1.7" fill="#0E1626"/><rect x="18" y="88" width="40" height="3.4" rx="1.7" fill="#0E1626"/><path d="M50 10 Q55 40 80 45 Q55 50 50 80 Q45 50 20 45 Q45 40 50 10 Z" fill="#0E1626"/><circle cx="74" cy="22" r="3" fill="#0E1626"/><circle cx="28" cy="30" r="2" fill="#0E1626"/></svg>
+        <div class="cap">Monochrome · encre</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOCKUPS -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">02</span><span class="sec-title">Lockups</span>
+      <span class="sec-desc">Horizontal sur clair et sur encre. Le mot « Nova » reste toujours en italique.</span>
+    </div>
+    <div class="grid2">
+      <div class="tile light" style="min-height:170px;">
+        <div class="lockup"><svg width="60" height="60" viewBox="0 0 100 100"><rect x="18" y="68" width="64" height="3.4" rx="1.7" fill="#1F2A44"/><rect x="18" y="78" width="50" height="3.4" rx="1.7" fill="#B3BCCB"/><rect x="18" y="88" width="40" height="3.4" rx="1.7" fill="#B3BCCB"/><path d="M50 10 Q55 40 80 45 Q55 50 50 80 Q45 50 20 45 Q45 40 50 10 Z" fill="#7A1F2B"/><circle cx="74" cy="22" r="3" fill="#C8941F"/><circle cx="28" cy="30" r="2" fill="#C8941F"/></svg>
+          <div class="stack"><div class="wm" style="font-size:31px;color:var(--ink-900)">Docket <em>Nova</em></div><div class="tag">Le rôle, éclairé</div></div></div>
+        <div class="cap">Fond clair</div>
+      </div>
+      <div class="tile ink" style="min-height:170px;">
+        <div class="lockup"><svg width="60" height="60" viewBox="0 0 100 100"><rect x="18" y="68" width="64" height="3.4" rx="1.7" fill="#FBF8F2"/><rect x="18" y="78" width="50" height="3.4" rx="1.7" fill="#46506A"/><rect x="18" y="88" width="40" height="3.4" rx="1.7" fill="#46506A"/><path d="M50 10 Q55 40 80 45 Q55 50 50 80 Q45 50 20 45 Q45 40 50 10 Z" fill="#E8C56C"/><circle cx="74" cy="22" r="3" fill="#E5A8B1"/><circle cx="28" cy="30" r="2" fill="#E5A8B1"/></svg>
+          <div class="stack"><div class="wm" style="font-size:31px;color:var(--parch-50)">Docket <em>Nova</em></div><div class="tag" style="color:#5A6479">Le rôle, éclairé</div></div></div>
+        <div class="cap">Fond encre</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APP ICON + FAVICON -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">03</span><span class="sec-title">App icon &amp; favicon</span>
+      <span class="sec-desc">À petite échelle, on garde l'étoile et deux lignes ; au plus petit, l'étoile seule.</span>
+    </div>
+    <div class="favrow">
+      <div class="fav"><img src="brand/png/appicon-1024.png" width="120" height="120" style="border-radius:26px" alt="app icon"><div class="lbl">App icon · 1024</div></div>
+      <div class="fav"><img src="brand/png/apple-touch-180.png" width="76" height="76" style="border-radius:17px" alt="apple touch"><div class="lbl">Apple touch · 180</div></div>
+      <div class="fav">
+        <div style="width:56px;height:56px;border-radius:13px;background:#07101F;display:flex;align-items:center;justify-content:center;">
+          <svg width="38" height="38" viewBox="0 0 100 100"><path d="M50 18 Q56 46 82 52 Q56 58 50 86 Q44 58 18 52 Q44 46 50 18 Z" fill="#E8C56C"/></svg>
+        </div><div class="lbl">Favicon · 56</div>
+      </div>
+      <div class="fav">
+        <div style="width:32px;height:32px;border-radius:8px;background:#07101F;display:flex;align-items:center;justify-content:center;">
+          <svg width="22" height="22" viewBox="0 0 100 100"><path d="M50 18 Q56 46 82 52 Q56 58 50 86 Q44 58 18 52 Q44 46 50 18 Z" fill="#E8C56C"/></svg>
+        </div><div class="lbl">Favicon · 32</div>
+      </div>
+      <div class="fav">
+        <div style="width:16px;height:16px;border-radius:4px;background:#07101F;display:flex;align-items:center;justify-content:center;">
+          <svg width="12" height="12" viewBox="0 0 100 100"><path d="M50 18 Q56 46 82 52 Q56 58 50 86 Q44 58 18 52 Q44 46 50 18 Z" fill="#E8C56C"/></svg>
+        </div><div class="lbl">16</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLEARSPACE -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">04</span><span class="sec-title">Zone de protection</span>
+      <span class="sec-desc">Réservez une marge égale à la largeur de l'étoile autour du symbole. Taille minimale : 24 px (symbole), 120 px (lockup).</span>
+    </div>
+    <div class="clear-stage">
+      <div class="clearbox">
+        <svg width="80" height="80" viewBox="0 0 100 100"><rect x="18" y="68" width="64" height="3.4" rx="1.7" fill="#1F2A44"/><rect x="18" y="78" width="50" height="3.4" rx="1.7" fill="#B3BCCB"/><rect x="18" y="88" width="40" height="3.4" rx="1.7" fill="#B3BCCB"/><path d="M50 10 Q55 40 80 45 Q55 50 50 80 Q45 50 20 45 Q45 40 50 10 Z" fill="#7A1F2B"/><circle cx="74" cy="22" r="3" fill="#C8941F"/><circle cx="28" cy="30" r="2" fill="#C8941F"/></svg>
+      </div>
+      <div style="max-width:30ch;color:var(--ink-500);font-size:15px;line-height:1.6;">La zone tramée représente l'air minimal à laisser respirer autour de la marque. Ne jamais y laisser entrer de texte, d'image ou de bord.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DO / DONT -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">05</span><span class="sec-title">Usage</span>
+      <span class="sec-desc">Quelques garde-fous pour garder la marque nette et reconnaissable.</span>
+    </div>
+    <div class="dos">
+      <div class="do good">
+        <div class="h">À faire</div>
+        <ul>
+          <li>Garder « Nova » en italique, toujours.</li>
+          <li>Oxblood sur clair · or sur encre.</li>
+          <li>Respecter la zone de protection.</li>
+          <li>Utiliser le monochrome quand une seule couleur est possible.</li>
+        </ul>
+      </div>
+      <div class="do bad">
+        <div class="h">À éviter</div>
+        <ul>
+          <li>Étirer, incliner ou déformer le symbole.</li>
+          <li>Recolorer l'étoile hors palette de marque.</li>
+          <li>Poser le lockup couleur sur un fond chargé.</li>
+          <li>Recréer le wordmark dans une autre police que Newsreader.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COLORS + TYPE -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">06</span><span class="sec-title">Couleurs &amp; typographie</span>
+    </div>
+    <div class="meta-grid">
+      <div class="card">
+        <h4>Cœur de marque</h4>
+        <div class="sw"><span class="chip" style="background:#7A1F2B"></span><span class="nm">Oxblood</span><span class="hex">#7A1F2B</span></div>
+        <div class="sw"><span class="chip" style="background:#07101F"></span><span class="nm">Encre de nuit</span><span class="hex">#07101F</span></div>
+        <div class="sw"><span class="chip" style="background:#FBF8F2"></span><span class="nm">Parchemin</span><span class="hex">#FBF8F2</span></div>
+      </div>
+      <div class="card">
+        <h4>Éclat · accents</h4>
+        <div class="sw"><span class="chip" style="background:#C8941F"></span><span class="nm">Or</span><span class="hex">#C8941F</span></div>
+        <div class="sw"><span class="chip" style="background:#E8C56C"></span><span class="nm">Or clair</span><span class="hex">#E8C56C</span></div>
+        <div class="sw"><span class="chip" style="background:#E5A8B1"></span><span class="nm">Rose étincelle</span><span class="hex">#E5A8B1</span></div>
+      </div>
+      <div class="card">
+        <h4>Typographie</h4>
+        <div class="sw"><span class="nm" style="font-size:25px">Newsreader</span><span class="hex">Wordmark</span></div>
+        <div class="sw"><span class="nm" style="font-style:italic;font-size:21px">Nova</span><span class="hex">Accent italic</span></div>
+        <div class="sw"><span class="nm" style="font-family:var(--fm);font-size:12px;letter-spacing:.1em">JETBRAINS MONO</span><span class="hex">Tagline</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FILES -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">07</span><span class="sec-title">Fichiers livrés</span>
+      <span class="sec-desc">Vectoriels pour l'impression et le web, PNG pour les usages rapides. Dossier <code style="font-family:var(--fm);font-size:13px">/brand</code>.</span>
+    </div>
+    <div class="files">
+      <div class="file"><span class="ext">SVG</span><span class="nm">docket-nova-lockup.svg</span><span class="sz">vectoriel</span></div>
+      <div class="file"><span class="ext">SVG</span><span class="nm">docket-nova-lockup-cream.svg</span><span class="sz">vectoriel</span></div>
+      <div class="file"><span class="ext">SVG</span><span class="nm">docket-nova-icon.svg</span><span class="sz">vectoriel</span></div>
+      <div class="file"><span class="ext">SVG</span><span class="nm">docket-nova-icon-mono-ink.svg</span><span class="sz">vectoriel</span></div>
+      <div class="file"><span class="ext">SVG</span><span class="nm">docket-nova-icon-mono-cream.svg</span><span class="sz">vectoriel</span></div>
+      <div class="file"><span class="ext">SVG</span><span class="nm">docket-nova-appicon.svg</span><span class="sz">vectoriel</span></div>
+      <div class="file"><span class="ext">SVG</span><span class="nm">favicon.svg</span><span class="sz">vectoriel</span></div>
+      <div class="file"><span class="ext">PNG</span><span class="nm">appicon-1024.png</span><span class="sz">1024²</span></div>
+      <div class="file"><span class="ext">PNG</span><span class="nm">apple-touch-180.png</span><span class="sz">180²</span></div>
+      <div class="file"><span class="ext">PNG</span><span class="nm">icon-512.png</span><span class="sz">512²</span></div>
+      <div class="file"><span class="ext">PNG</span><span class="nm">icon-256.png</span><span class="sz">256²</span></div>
+      <div class="file"><span class="ext">PNG</span><span class="nm">favicon-32 · favicon-16.png</span><span class="sz">32² · 16²</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="rec">Le kit <em>L'Étoile levante</em> est prêt.</div>
+    Tous les fichiers vivent dans <code style="font-family:var(--fm);font-size:13px">/brand</code>. Dis-moi si tu veux un favicon en <code style="font-family:var(--fm)">.ico</code> multi-tailles, une version animée (l'étoile qui se lève) pour l'écran de chargement, ou que j'intègre le logo directement dans l'app du prototype.
+  </div>
+</footer>
+
+</body>
+</html>
