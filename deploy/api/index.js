@@ -1,11 +1,48 @@
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
+const crypto = require('crypto');
 
 const app = express();
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
-app.use(cors({ origin: ['http://docketnova.com', 'https://docketnova.com', 'http://www.docketnova.com', 'https://www.docketnova.com'] }));
+// Secret pour signer les jetons d'accès démo (HMAC). Réutilise ADMIN_KEY si pas défini.
+const ACCESS_SECRET = process.env.ACCESS_SECRET || process.env.ADMIN_KEY || 'change-me';
+const ACCESS_TTL_MS = 1000 * 60 * 60 * 8; // 8 heures
+const COOKIE_NAME = 'dn_access';
+
+// Crée un jeton signé "<expiry>.<hmac>"
+function makeToken() {
+  const exp = Date.now() + ACCESS_TTL_MS;
+  const sig = crypto.createHmac('sha256', ACCESS_SECRET).update(String(exp)).digest('hex');
+  return `${exp}.${sig}`;
+}
+
+// Vérifie un jeton (signature valide + non expiré)
+function verifyToken(token) {
+  if (!token || typeof token !== 'string') return false;
+  const [expStr, sig] = token.split('.');
+  if (!expStr || !sig) return false;
+  const expected = crypto.createHmac('sha256', ACCESS_SECRET).update(expStr).digest('hex');
+  // comparaison à temps constant
+  const a = Buffer.from(sig);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return false;
+  return Number(expStr) > Date.now();
+}
+
+// Lit un cookie depuis l'en-tête
+function readCookie(req, name) {
+  const raw = req.headers.cookie;
+  if (!raw) return null;
+  for (const part of raw.split(';')) {
+    const [k, ...v] = part.trim().split('=');
+    if (k === name) return decodeURIComponent(v.join('='));
+  }
+  return null;
+}
+
+app.use(cors({ origin: ['http://docketnova.com', 'https://docketnova.com', 'http://www.docketnova.com', 'https://www.docketnova.com'], credentials: true }));
 app.use(express.json());
 
 app.post('/api/demo', async (req, res) => {
@@ -72,11 +109,27 @@ app.post('/api/verify-code', async (req, res) => {
       [row.id]
     );
 
+    // Pose un cookie de session signé qui autorise l'accès à /app/
+    const token = makeToken();
+    res.setHeader('Set-Cookie',
+      `${COOKIE_NAME}=${token}; Path=/; Max-Age=${Math.floor(ACCESS_TTL_MS / 1000)}; HttpOnly; SameSite=Lax`
+    );
+
     res.json({ ok: true, label: row.label || null });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Erreur serveur.' });
   }
+});
+
+// Endpoint interne pour nginx auth_request — vérifie le cookie d'accès.
+// 200 = autorisé, 401 = refusé.
+app.get('/api/check-access', (req, res) => {
+  const token = readCookie(req, COOKIE_NAME);
+  if (verifyToken(token)) {
+    return res.status(200).end();
+  }
+  return res.status(401).end();
 });
 
 // Créer un code (usage admin — protéger avec ADMIN_KEY en env)

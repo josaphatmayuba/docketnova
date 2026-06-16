@@ -21,6 +21,7 @@ services:
       DATABASE_URL: postgres://docketnova:${DB_PASSWORD}@db:5432/docketnova
       PORT: 3001
       ADMIN_KEY: ${ADMIN_KEY}
+      ACCESS_SECRET: ${ACCESS_SECRET}
     depends_on:
       - db
     networks:
