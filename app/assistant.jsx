@@ -48,23 +48,30 @@ const Assistant = ({ tweaks, onNav, scenarioId, onScenario, playAll }) => {
   }, [scenarioId, lang, replayKey === -1]);
 
   // Auto-scroll vers le bas — y compris pendant que l'IA "écrit" (streaming).
-  // Le ResizeObserver suit la croissance du contenu ; on ne colle au bas que si
-  // l'utilisateur n'a pas remonté manuellement.
+  // On colle au bas par défaut ; on se désactive seulement si l'utilisateur
+  // remonte volontairement, et on se réactive dès qu'il revient en bas.
+  const stickToBottom = React.useRef(true);
   React.useEffect(() => {
     const sc = scrollRef.current;
     const ct = contentRef.current;
     if (!sc || !ct) return;
-    const stick = () => {
-      const nearBottom = sc.scrollHeight - sc.scrollTop - sc.clientHeight < 120;
-      if (nearBottom) sc.scrollTop = sc.scrollHeight;
+
+    const onScroll = () => {
+      const dist = sc.scrollHeight - sc.scrollTop - sc.clientHeight;
+      stickToBottom.current = dist < 80; // proche du bas => on continue de suivre
     };
+    sc.addEventListener("scroll", onScroll, { passive: true });
+
+    const stick = () => { if (stickToBottom.current) sc.scrollTop = sc.scrollHeight; };
+    stickToBottom.current = true;
     sc.scrollTop = sc.scrollHeight; // saut initial en bas
+
     let ro;
     if (typeof ResizeObserver !== "undefined") {
       ro = new ResizeObserver(stick);
       ro.observe(ct);
     }
-    return () => { if (ro) ro.disconnect(); };
+    return () => { sc.removeEventListener("scroll", onScroll); if (ro) ro.disconnect(); };
   }, [replayKey, scenarioId, lang]);
 
   // ─── Helpers ───────────────────────────────────────────────────────
