@@ -89,6 +89,7 @@ These factors demonstrate the absence of real incompatibility.`,
 
 const Argumentaires = ({ lang, onNav }) => {
   const [active, setActive] = React.useState("intro");
+  const isMobile = useIsMobile(768);
 
   const activeOutline = OUTLINE.find((o) => o.id === active);
   const content = SECTION_CONTENT[active];
@@ -113,10 +114,14 @@ const Argumentaires = ({ lang, onNav }) => {
         </button>
       </div>
 
-      {/* Two-pane layout */}
-      <div style={{ flex: 1, display: "grid", gridTemplateColumns: "280px 1fr", minHeight: 0 }}>
+      {/* Two-pane layout (une seule colonne sur mobile) */}
+      <div style={{ flex: 1, display: "grid", gridTemplateColumns: isMobile ? "1fr" : "280px 1fr", minHeight: 0,
+                    gridTemplateRows: isMobile ? "auto 1fr" : undefined }}>
         {/* Outline (left) */}
-        <aside style={{ borderRight: "1px solid var(--border-1)", overflow: "auto", padding: "20px 18px", background: "#FBF8F2" }}>
+        <aside style={{ borderRight: isMobile ? "none" : "1px solid var(--border-1)",
+                        borderBottom: isMobile ? "1px solid var(--border-1)" : "none",
+                        overflow: "auto", padding: "20px 18px", background: "#FBF8F2",
+                        maxHeight: isMobile ? 180 : undefined }}>
           <Overline style={{ marginBottom: 10 }}>{lang === "en" ? "Outline" : "Plan"}</Overline>
           <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
             {OUTLINE.map((o, i) => {

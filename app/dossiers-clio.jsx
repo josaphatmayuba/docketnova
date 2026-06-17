@@ -135,6 +135,9 @@ const DossiersClioBrowser = ({ lang, onNav }) => {
   const [activeTab, setActiveTab] = React.useState("overview");
   const [filter, setFilter] = React.useState("all");
   const [search, setSearch] = React.useState("");
+  const isMobile = useIsMobile(768);
+  // Sur mobile : on bascule entre la liste et le détail (pas les deux côte à côte)
+  const [mobileView, setMobileView] = React.useState("list");
 
   const filtered = DOSSIERS_CLIO.filter((d) => {
     if (filter === "active" && d.status !== "active") return false;
@@ -142,17 +145,22 @@ const DossiersClioBrowser = ({ lang, onNav }) => {
     return true;
   });
 
+  const showList = !isMobile || mobileView === "list";
+  const showDetail = !isMobile || mobileView === "detail";
+
   return (
-    <div style={{ display: "flex", height: "100vh", background: CLIO_PALETTE.bg }}>
+    <div style={{ display: "flex", height: "100%", minHeight: 0, background: CLIO_PALETTE.bg }}>
       {/* ─── Left sidebar: dossier list ─────────────────────────────────────── */}
+      {showList && (
       <div style={{
-        width: 320,
+        width: isMobile ? "100%" : 320,
         background: CLIO_PALETTE.navy,
         color: "white",
         overflow: "auto",
         borderRight: `1px solid ${CLIO_PALETTE.slate}`,
         display: "flex",
         flexDirection: "column",
+        flexShrink: 0,
       }}>
         {/* Header */}
         <div style={{ padding: "20px 16px", borderBottom: `1px solid ${CLIO_PALETTE.slate}` }}>
@@ -216,7 +224,7 @@ const DossiersClioBrowser = ({ lang, onNav }) => {
           {filtered.map((d) => (
             <button
               key={d.id}
-              onClick={() => { setSelectedDossier(d); setActiveTab("overview"); }}
+              onClick={() => { setSelectedDossier(d); setActiveTab("overview"); if (isMobile) setMobileView("detail"); }}
               style={{
                 width: "100%",
                 padding: "16px",
@@ -258,19 +266,30 @@ const DossiersClioBrowser = ({ lang, onNav }) => {
           ))}
         </div>
       </div>
+      )}
 
       {/* ─── Right panel: dossier detail ──────────────────────────────────────── */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      {showDetail && (
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden", minWidth: 0 }}>
         {/* Header bar */}
         <div style={{
-          padding: "20px 32px",
+          padding: isMobile ? "14px 18px" : "20px 32px",
           borderBottom: `1px solid ${CLIO_PALETTE.border}`,
           background: "white",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          gap: 12,
         }}>
-          <div>
+          {isMobile && (
+            <button onClick={() => setMobileView("list")} aria-label="Retour" style={{
+              background: "transparent", border: 0, cursor: "pointer", padding: 4,
+              display: "flex", alignItems: "center", flexShrink: 0, marginLeft: -4,
+            }}>
+              <Icon name="arrowLeft" size={20} color={CLIO_PALETTE.navy}/>
+            </button>
+          )}
+          <div style={{ minWidth: 0 }}>
             <div style={{ fontSize: 12, color: CLIO_PALETTE.gray, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 4 }}>
               {selectedDossier.docket}
             </div>
@@ -355,13 +374,14 @@ const DossiersClioBrowser = ({ lang, onNav }) => {
           )}
         </div>
       </div>
+      )}
     </div>
   );
 };
 
 const OverviewTab = ({ dossier, lang }) => (
   <div style={{ maxWidth: 1000 }}>
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 32 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 16, marginBottom: 32 }}>
       <StatCard label={lang === "en" ? "Court" : "Tribunal"} value={tr(dossier.court, lang)} />
       <StatCard label={lang === "en" ? "Opened" : "Ouvert"} value={dossier.opened} />
       <StatCard label={lang === "en" ? "Next event" : "Prochain événement"} value={tr(dossier.nextEvent, lang)} accent />
@@ -371,7 +391,7 @@ const OverviewTab = ({ dossier, lang }) => (
       <div style={{ fontSize: 14, fontWeight: 600, color: CLIO_PALETTE.navy, marginBottom: 16 }}>
         {lang === "en" ? "Activity" : "Activité"}
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 16 }}>
         <ActivityCard icon="📄" label={lang === "en" ? "Documents" : "Documents"} count={dossier.documents} />
         <ActivityCard icon="📝" label={lang === "en" ? "Notes" : "Notes"} count={dossier.notes} />
         <ActivityCard icon="💬" label={lang === "en" ? "Communications" : "Communications"} count={dossier.communications} />

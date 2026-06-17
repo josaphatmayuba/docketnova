@@ -23,7 +23,9 @@
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
+  html,body{overflow-x:hidden;max-width:100%;}
   body{background:var(--parch-50);color:var(--ink-900);font-family:var(--fs);-webkit-font-smoothing:antialiased;line-height:1.5;}
+  img,video,canvas{max-width:100%;height:auto;}
   .wrap{max-width:1200px;margin:0 auto;padding:0 32px;}
   a{color:inherit;text-decoration:none;}
   .serif{font-family:var(--fd);}
@@ -51,6 +53,9 @@
   .nav-links a:hover{color:var(--ink-950);}
   .nav-cta{margin-left:auto;display:flex;align-items:center;gap:14px;}
   .nav-cta .login{font-size:14.5px;color:var(--ink-700);white-space:nowrap;}
+  /* CTA nav : texte complet par défaut, "Démo" court sur mobile */
+  .nav-demo-btn .cta-short{display:none;}
+  .nav-demo-btn{white-space:nowrap;}
 
   /* HERO */
   .hero{position:relative;overflow:hidden;padding:88px 0 96px;}
@@ -212,6 +217,14 @@
     .nav-links{display:none;} .comply{padding:40px 26px;}
     .quote blockquote{font-size:24px;}
   }
+  /* Petit mobile : le CTA du header devient juste "Démo" */
+  @media(max-width:560px){
+    .wrap{padding:0 18px;}
+    .nav-in{gap:14px;height:62px;}
+    .nav-demo-btn .cta-full{display:none;}
+    .nav-demo-btn .cta-short{display:inline;}
+    .nav-demo-btn{padding-left:16px;padding-right:16px;}
+  }
   .integ{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:50px;}
   .integ .it{background:var(--paper);border:1px solid var(--parch-200);border-radius:14px;padding:28px;display:flex;flex-direction:column;gap:14px;}
   .integ .it .ico{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-family:var(--fs);font-size:18px;}
@@ -337,7 +350,10 @@
         <button data-lang="fr" class="on">FR</button>
         <button data-lang="en">EN</button>
       </div>
-      <a class="btn btn-primary" href="#demo" data-en="Request a demo">Demander une démo</a>
+      <a class="btn btn-primary nav-demo-btn" href="#demo">
+        <span class="cta-full" data-en="Request a demo">Demander une démo</span>
+        <span class="cta-short" data-en="Demo">Démo</span>
+      </a>
     </div>
   </div>
 </nav>

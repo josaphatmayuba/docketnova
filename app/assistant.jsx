@@ -10,6 +10,7 @@ const Assistant = ({ tweaks, onNav, scenarioId, onScenario, playAll }) => {
   const speed = tweaks.streamSpeed;
   const showRail = tweaks.showRail;
   const layout = tweaks.layout;
+  const isMobile = useIsMobile(768);
 
   const scenario = SCENARIOS.find((s) => s.id === scenarioId) || SCENARIOS[0];
 
@@ -149,8 +150,8 @@ const Assistant = ({ tweaks, onNav, scenarioId, onScenario, playAll }) => {
         </div>
       </div>
 
-      {/* Context rail */}
-      {showRail && layout === "three-col" && (
+      {/* Context rail — masqué sur mobile (cacherait la conversation) */}
+      {showRail && layout === "three-col" && !isMobile && (
         <ContextRail lang={lang} scenario={scenario} onNav={onNav}/>
       )}
     </div>
