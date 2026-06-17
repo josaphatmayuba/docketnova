@@ -4,23 +4,39 @@
 // embeds LexiBridge into the lawyer's existing tools so the workflow is
 // frictionless. This is the bridge from product → daily habit.
 
+// Badges de marque (logos officiels stylisés en SVG inline)
+const BrandBadge = ({ brand, size = 26 }) => {
+  const s = { width: size, height: size, borderRadius: 6, flexShrink: 0, display: "block" };
+  if (brand === "word") return (
+    <svg viewBox="0 0 24 24" style={s}><rect width="24" height="24" rx="4" fill="#2B579A"/><text x="12" y="17" fontSize="13" fontWeight="700" fill="#fff" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif">W</text></svg>
+  );
+  if (brand === "outlook") return (
+    <svg viewBox="0 0 24 24" style={s}><rect width="24" height="24" rx="4" fill="#0F6CBD"/><text x="12" y="17" fontSize="13" fontWeight="700" fill="#fff" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif">O</text></svg>
+  );
+  // clio / practice management
+  return (
+    <svg viewBox="0 0 24 24" style={s}><rect width="24" height="24" rx="4" fill="#7A1F2B"/><path d="M7 12.5l3 3 7-7" stroke="#fff" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+  );
+};
+
 const Integrations = ({ lang, onNav }) => {
   const [tab, setTab] = React.useState("word");
+  const isMobile = useIsMobile(768);
 
   const tabs = [
-    { id: "word",    label: { fr: "Microsoft Word", en: "Microsoft Word" }, sub: { fr: "Plugin de rédaction", en: "Drafting plugin" }, icon: "fileText" },
-    { id: "outlook", label: { fr: "Outlook",        en: "Outlook" },         sub: { fr: "Calendrier · délais", en: "Calendar · deadlines" }, icon: "clock" },
-    { id: "clio",    label: { fr: "Clio · JurisConcept", en: "Clio · JurisConcept" }, sub: { fr: "Gestion de cabinet", en: "Practice management" }, icon: "folder" },
+    { id: "word",    brand: "word",    label: { fr: "Microsoft Word", en: "Microsoft Word" }, short: "Word",    sub: { fr: "Plugin de rédaction", en: "Drafting plugin" } },
+    { id: "outlook", brand: "outlook", label: { fr: "Outlook",        en: "Outlook" },         short: "Outlook", sub: { fr: "Calendrier · délais", en: "Calendar · deadlines" } },
+    { id: "clio",    brand: "clio",    label: { fr: "Clio · JurisConcept", en: "Clio · JurisConcept" }, short: "Clio", sub: { fr: "Gestion de cabinet", en: "Practice management" } },
   ];
 
   return (
-    <div style={{ flex: 1, overflow: "auto", padding: "28px 36px 48px" }}>
+    <div style={{ flex: 1, overflow: "auto", padding: isMobile ? "20px 16px 40px" : "28px 36px 48px" }}>
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
 
         {/* Header */}
         <div style={{ marginBottom: 22 }}>
           <Overline style={{ marginBottom: 6 }}>{lang === "en" ? "Connected ecosystem · feature 11" : "Écosystème connecté · fonctionnalité 11"}</Overline>
-          <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 40, color: "var(--ink-950)", letterSpacing: "-0.02em", margin: 0, lineHeight: 1.1 }}>
+          <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: isMobile ? 28 : 40, color: "var(--ink-950)", letterSpacing: "-0.02em", margin: 0, lineHeight: 1.1 }}>
             {lang === "en"
               ? <>LexiBridge lives <i style={{ color: "#7A1F2B" }}>where you already work</i>.</>
               : <>LexiBridge vit <i style={{ color: "#7A1F2B" }}>là où vous travaillez déjà</i>.</>}
@@ -32,27 +48,48 @@ const Integrations = ({ lang, onNav }) => {
           </p>
         </div>
 
-        {/* Tabs */}
-        <div style={{ display: "flex", gap: 8, marginBottom: 20, borderBottom: "1px solid var(--border-1)" }}>
-          {tabs.map((t) => {
-            const isActive = tab === t.id;
-            return (
-              <button key={t.id} onClick={() => setTab(t.id)} style={{
-                display: "flex", alignItems: "center", gap: 10,
-                padding: "12px 16px 14px", border: 0, background: "transparent",
-                cursor: "pointer", borderBottom: "2px solid " + (isActive ? "var(--oxblood-700)" : "transparent"),
-                marginBottom: -1,
-              }}>
-                <Icon name={t.icon} size={17} color={isActive ? "var(--oxblood-700)" : "var(--ink-500)"}/>
-                <div style={{ textAlign: "left" }}>
-                  <div style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 13.5,
-                                color: isActive ? "var(--ink-950)" : "var(--ink-600)" }}>{tr(t.label, lang)}</div>
-                  <div style={{ fontSize: 11, color: "var(--ink-500)", marginTop: 1 }}>{tr(t.sub, lang)}</div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+        {/* Tabs — chips compacts à badge de marque sur mobile */}
+        {isMobile ? (
+          <div style={{ display: "flex", gap: 8, marginBottom: 20, overflowX: "auto", paddingBottom: 2 }}>
+            {tabs.map((t) => {
+              const isActive = tab === t.id;
+              return (
+                <button key={t.id} onClick={() => setTab(t.id)} style={{
+                  display: "inline-flex", alignItems: "center", gap: 8, flexShrink: 0,
+                  padding: "8px 14px", borderRadius: 999, cursor: "pointer",
+                  border: "1px solid " + (isActive ? "var(--oxblood-700)" : "var(--border-2)"),
+                  background: isActive ? "var(--oxblood-50)" : "var(--paper)",
+                  fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 13,
+                  color: isActive ? "var(--oxblood-700)" : "var(--ink-700)", whiteSpace: "nowrap",
+                }}>
+                  <BrandBadge brand={t.brand} size={20}/>
+                  {t.short}
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <div style={{ display: "flex", gap: 8, marginBottom: 20, borderBottom: "1px solid var(--border-1)" }}>
+            {tabs.map((t) => {
+              const isActive = tab === t.id;
+              return (
+                <button key={t.id} onClick={() => setTab(t.id)} style={{
+                  display: "flex", alignItems: "center", gap: 10,
+                  padding: "12px 16px 14px", border: 0, background: "transparent",
+                  cursor: "pointer", borderBottom: "2px solid " + (isActive ? "var(--oxblood-700)" : "transparent"),
+                  marginBottom: -1,
+                }}>
+                  <BrandBadge brand={t.brand} size={26}/>
+                  <div style={{ textAlign: "left" }}>
+                    <div style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 13.5,
+                                  color: isActive ? "var(--ink-950)" : "var(--ink-600)" }}>{tr(t.label, lang)}</div>
+                    <div style={{ fontSize: 11, color: "var(--ink-500)", marginTop: 1 }}>{tr(t.sub, lang)}</div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {tab === "word" && <WordPlugin lang={lang} onNav={onNav}/>}
         {tab === "outlook" && <OutlookView lang={lang}/>}
