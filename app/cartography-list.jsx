@@ -114,11 +114,12 @@ const CartographyList = ({ lang, onNav }) => {
 };
 
 const CartographyCard = ({ network, lang, onNav }) => {
+  const isMobile = useIsMobile(768);
   return (
     <button
       onClick={() => onNav("cartography-detail")}
       style={{
-        display: "grid", gridTemplateColumns: "1fr auto auto", gap: 20, alignItems: "start",
+        display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr auto auto", gap: isMobile ? 10 : 20, alignItems: "start",
         padding: 16, borderRadius: 12, border: "1px solid var(--border-1)",
         background: "var(--paper)", cursor: "pointer", textAlign: "left",
         transition: "all var(--dur-fast) var(--ease-out)",

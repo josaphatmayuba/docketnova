@@ -150,6 +150,7 @@ const ReversalsList = ({ lang, onNav }) => {
 };
 
 const ReversalCard = ({ reversal, lang, onNav }) => {
+  const isMobile = useIsMobile(768);
   const severityColors = {
     high: { bg: "#FBEEF0", text: "#7A1F2B", label: { fr: "Impact élevé", en: "High impact" } },
     medium: { bg: "#FBF3D9", text: "#C8941F", label: { fr: "Impact moyen", en: "Medium impact" } },
@@ -161,7 +162,7 @@ const ReversalCard = ({ reversal, lang, onNav }) => {
     <button
       onClick={() => onNav("reversal-detail")}
       style={{
-        display: "grid", gridTemplateColumns: "1fr auto", gap: 16, alignItems: "start",
+        display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr auto", gap: isMobile ? 10 : 16, alignItems: "start",
         padding: 16, borderRadius: 12, border: "1px solid var(--border-1)",
         background: "var(--paper)", cursor: "pointer", textAlign: "left",
         transition: "all var(--dur-fast) var(--ease-out)",

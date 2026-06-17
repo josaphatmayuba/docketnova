@@ -2,6 +2,7 @@
 // Cartographie — citation network around a focal case. Bilingual.
 
 const Cartography = ({ lang }) => {
+  const isMobile = useIsMobile(768);
   const nodes = [
     { id: "focus", x: 50, y: 50, r: 38, case: "Bombardier", focus: true },
     { id: "a", x: 18, y: 22, r: 22, case: "Dupont",     relation: { fr: "cite",      en: "cites" } },
@@ -15,17 +16,17 @@ const Cartography = ({ lang }) => {
   const color = (sol) => sol < 50 ? "#B0394A" : sol < 70 ? "#C8941F" : "#3D7A4E";
 
   return (
-    <div style={{ flex: 1, overflow: "auto", padding: "24px 36px 32px" }}>
+    <div style={{ flex: 1, overflow: "auto", padding: isMobile ? "20px 16px 28px" : "24px 36px 32px" }}>
       <div style={{ maxWidth: 1080, margin: "0 auto" }}>
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 18 }}>
+        <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", justifyContent: "space-between", gap: isMobile ? 12 : 0, marginBottom: 18 }}>
           <div>
             <Overline style={{ marginBottom: 4 }}>{lang === "en" ? "Citation cartography" : "Cartographie des citations"}</Overline>
-            <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 30, color: "var(--ink-950)", letterSpacing: "-0.02em", margin: 0 }}>
+            <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: isMobile ? 24 : 30, color: "var(--ink-950)", letterSpacing: "-0.02em", margin: 0 }}>
               {lang === "en" ? "Around " : "Autour de "}<span style={{ fontStyle: "italic", color: "#7A1F2B" }}>Syndicat c. Bombardier</span>
             </h1>
           </div>
-          <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+          <div style={{ display: "flex", gap: 14, alignItems: "center", flexWrap: "wrap" }}>
             <LegendDot color="#3D7A4E" label={lang === "en" ? "Solid ≥ 70" : "Solide ≥ 70"}/>
             <LegendDot color="#C8941F" label={lang === "en" ? "Weakened" : "Affaibli"}/>
             <LegendDot color="#B0394A" label={lang === "en" ? "Distinguished < 50" : "Distingué < 50"}/>
@@ -83,13 +84,13 @@ const Cartography = ({ lang }) => {
           })}
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 14 }}>
+        <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", justifyContent: "space-between", gap: isMobile ? 12 : 0, marginTop: 14 }}>
           <div style={{ fontSize: 12, color: "var(--ink-500)" }}>
             {lang === "en"
               ? "6 directly-linked rulings · 41 at second degree · Updated May 11 2026"
               : "6 arrêts liés directement · 41 au second degré · Mise à jour 11 mai 2026"}
           </div>
-          <div style={{ display: "flex", gap: 8 }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <GhostButton>{lang === "en" ? "Expand to 2 degrees" : "Élargir à 2 degrés"}</GhostButton>
             <GhostButton>{lang === "en" ? "Export" : "Exporter"}</GhostButton>
           </div>

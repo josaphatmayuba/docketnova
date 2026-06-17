@@ -134,6 +134,7 @@ const ArgumentairesList = ({ lang, onNav }) => {
 };
 
 const ArgumentaireCard = ({ arg, lang, onNav }) => {
+  const isMobile = useIsMobile(768);
   const statusColors = {
     draft: { bg: "#FBF3D9", text: "#C8941F", label: { fr: "Brouillon", en: "Draft" } },
     ready: { bg: "#E7F0EA", text: "#3D7A4E", label: { fr: "Prêt", en: "Ready" } },
@@ -145,7 +146,7 @@ const ArgumentaireCard = ({ arg, lang, onNav }) => {
     <button
       onClick={() => onNav("argumentaire-detail")}
       style={{
-        display: "grid", gridTemplateColumns: "1fr auto auto", gap: 16, alignItems: "start",
+        display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr auto auto", gap: isMobile ? 10 : 16, alignItems: "start",
         padding: 16, borderRadius: 12, border: "1px solid var(--border-1)",
         background: "var(--paper)", cursor: "pointer", textAlign: "left",
         transition: "all var(--dur-fast) var(--ease-out)",
