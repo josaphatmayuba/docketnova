@@ -2,15 +2,17 @@
 // Tableau de bord — the lawyer's morning overview. Also doubles as a
 // landing page that surfaces the 10 features in a glanceable way.
 
-const Dashboard = ({ lang, onNav }) => (
-  <div style={{ flex: 1, overflow: "auto", padding: "28px 36px 48px" }}>
+const Dashboard = ({ lang, onNav }) => {
+  const isMobile = useIsMobile(768);
+  return (
+  <div style={{ flex: 1, overflow: "auto", padding: isMobile ? "20px 16px 40px" : "28px 36px 48px" }}>
     <div style={{ maxWidth: 1100, margin: "0 auto" }}>
 
       {/* Hero greeting */}
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 32, marginBottom: 28 }}>
+      <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: "flex-start", justifyContent: "space-between", gap: isMobile ? 18 : 32, marginBottom: 28 }}>
         <div style={{ flex: 1 }}>
           <Overline style={{ marginBottom: 6 }}>{lang === "en" ? "Mardi · May 14, 2026" : "Mardi · 14 mai 2026"}</Overline>
-          <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 44, color: "var(--ink-950)", letterSpacing: "-0.02em", margin: 0, lineHeight: 1.1 }}>
+          <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: isMobile ? 30 : 44, color: "var(--ink-950)", letterSpacing: "-0.02em", margin: 0, lineHeight: 1.1 }}>
             {lang === "en"
               ? <>Bonjour Me Côté.<br/><i style={{ color: "#7A1F2B" }}>Three things</i> need your attention today.</>
               : <>Bonjour Me Côté.<br/><i style={{ color: "#7A1F2B" }}>Trois choses</i> méritent votre attention aujourd'hui.</>
@@ -35,7 +37,7 @@ const Dashboard = ({ lang, onNav }) => (
       </div>
 
       {/* 3 priority cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginBottom: 30 }}>
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(3, 1fr)", gap: 16, marginBottom: 30 }}>
         <Priority
           tone="oxblood" tag={lang === "en" ? "Hearing tomorrow" : "Audience demain"}
           time="9 h 30"
@@ -93,7 +95,7 @@ const Dashboard = ({ lang, onNav }) => (
         </h2>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 12 }}>
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: 12 }}>
         {[
           { n: 1, label: { fr: "Recherche unifiée",   en: "Unified search" },     icon: "search",  to: "search" },
           { n: 2, label: { fr: "Scoring 3D",          en: "3D Scoring" },         icon: "target",  to: "search", system: true },
@@ -146,7 +148,8 @@ const Dashboard = ({ lang, onNav }) => (
       </div>
     </div>
   </div>
-);
+  );
+};
 
 const Priority = ({ tone, tag, time, title, body, score, scoreLabel, actions, onNav }) => {
   const tones = {

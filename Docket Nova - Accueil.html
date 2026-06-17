@@ -877,6 +877,12 @@
 </div>
 
 <script>
+// Langue de la page = langue du navigateur. FR si le navigateur est en français,
+// sinon EN par défaut (toute autre langue non supportée bascule en anglais).
+function detectLang(){
+  var nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+  return nav.indexOf('fr') === 0 ? 'fr' : 'en';
+}
 (function(){
   var els = Array.prototype.slice.call(document.querySelectorAll('[data-en]'));
   var frCache = new Map();
@@ -896,8 +902,8 @@
     b.addEventListener('click', function(){ setLang(b.getAttribute('data-lang')); });
   });
 
-  var saved = 'fr';
-  try{ saved = localStorage.getItem('dn_lang') || 'fr'; }catch(e){}
+  var saved = detectLang();
+  try{ saved = localStorage.getItem('dn_lang') || detectLang(); }catch(e){}
   if(saved === 'en') setLang('en');
 })();
 
@@ -1004,7 +1010,7 @@
       if(overlay.classList.contains('open')) applyLang();
     });
   });
-  try{ currentLang = localStorage.getItem('dn_lang') || 'fr'; }catch(e){}
+  try{ currentLang = localStorage.getItem('dn_lang') || detectLang(); }catch(e){ currentLang = detectLang(); }
 
   // Ouvrir le modal sur tous les liens #demo
   document.querySelectorAll('a[href="#demo"]').forEach(function(a){

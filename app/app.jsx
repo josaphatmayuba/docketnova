@@ -166,6 +166,20 @@ const App = () => {
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const [active, setActive] = React.useState("dashboard");
   const [scenarioId, setScenarioId] = React.useState("dupont");
+  const isMobile = useIsMobile(768);
+  const [navOpen, setNavOpen] = React.useState(false);
+
+  // Langue initiale = langue du navigateur (en/fr), une seule fois au montage.
+  // L'utilisateur peut ensuite la changer via le sélecteur FR/EN.
+  const langInit = React.useRef(false);
+  React.useEffect(() => {
+    if (langInit.current) return;
+    langInit.current = true;
+    // FR si le navigateur est en français, sinon EN par défaut.
+    const nav = (navigator.language || navigator.userLanguage || "en").toLowerCase();
+    const lang = nav.startsWith("fr") ? "fr" : "en";
+    if (lang !== t.lang) setTweak("lang", lang);
+  }, []);
 
   const screen = SCREENS[active] || SCREENS.dashboard;
   // Lazy-resolve DossiersClioBrowser from window in case it wasn't loaded yet
@@ -195,15 +209,40 @@ const App = () => {
       display: "flex", height: "100vh", width: "100vw",
       background: "var(--bg-app)", overflow: "hidden",
     }}>
-      <Sidebar active={active} onNav={handleNav} density={t.density}/>
+      <Sidebar active={active} onNav={handleNav} density={t.density}
+               isMobile={isMobile} open={navOpen} onClose={() => setNavOpen(false)}/>
+
+      {/* Overlay sombre derrière le tiroir (mobile uniquement) */}
+      {isMobile && navOpen && (
+        <div onClick={() => setNavOpen(false)} style={{
+          position: "fixed", inset: 0, zIndex: 40,
+          background: "rgba(14,22,38,0.45)",
+        }}/>
+      )}
+
       <div data-screen-label={tr(screen.title, t.lang)} style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0 }}>
-        {screen.chrome === "topbar" && (
+        {screen.chrome === "topbar" ? (
           <Topbar
             title={tr(screen.title, t.lang)}
             breadcrumb={tr(screen.crumb, t.lang)}
             lang={t.lang}
             onLang={(l) => setTweak("lang", l)}
+            isMobile={isMobile}
+            onMenu={() => setNavOpen(true)}
           />
+        ) : (
+          // Écrans sans topbar : bouton menu flottant sur mobile
+          isMobile && (
+            <button onClick={() => setNavOpen(true)} aria-label="Menu" style={{
+              position: "fixed", top: 12, left: 12, zIndex: 30,
+              width: 40, height: 40, borderRadius: 10,
+              background: "var(--paper)", border: "1px solid var(--border-2)",
+              boxShadow: "0 2px 8px rgba(14,22,38,0.12)",
+              display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
+            }}>
+              <Icon name="menu" size={20} color="var(--ink-900)"/>
+            </button>
+          )
         )}
         <Comp
           tweaks={t}

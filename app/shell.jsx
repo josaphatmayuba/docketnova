@@ -47,14 +47,24 @@ const DOSSIERS = [
   { id: "roy",      name: "Roy c. Trudel",            area: "Contrat",        hot: false, date: "—" },
 ];
 
-const Sidebar = ({ active, onNav, density }) => {
+const Sidebar = ({ active, onNav, density, isMobile, open, onClose }) => {
   const compact = density === "compact";
   const pad = compact ? "6px 10px" : "8px 10px";
+  // Sur mobile : tiroir off-canvas (position fixe, glisse depuis la gauche)
+  const mobileStyle = isMobile ? {
+    position: "fixed", top: 0, left: 0, bottom: 0, zIndex: 50,
+    transform: open ? "translateX(0)" : "translateX(-100%)",
+    transition: "transform 240ms cubic-bezier(0.4,0,0.2,1)",
+    boxShadow: open ? "0 0 40px rgba(0,0,0,0.35)" : "none",
+    width: 280,
+  } : {};
+  const handleNav = (id) => { onNav(id); if (isMobile && onClose) onClose(); };
   return (
     <aside style={{
       width: 252, background: "#0E1626", color: "#FBF8F2",
       display: "flex", flexDirection: "column", flexShrink: 0,
       borderRight: "1px solid #1F2A44",
+      ...mobileStyle,
     }}>
       {/* Brand */}
       <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "18px 18px 14px" }}>
@@ -85,7 +95,7 @@ const Sidebar = ({ active, onNav, density }) => {
             {g.items.map((n) => {
               const isActive = active === n.id;
               return (
-                <button key={n.id} onClick={() => onNav(n.id)} style={{
+                <button key={n.id} onClick={() => handleNav(n.id)} style={{
                   display: "grid", gridTemplateColumns: n.n != null ? "20px 18px 1fr auto" : "18px 1fr auto",
                   alignItems: "center", gap: 10,
                   padding: pad, border: 0, borderRadius: 6,
@@ -132,7 +142,7 @@ const Sidebar = ({ active, onNav, density }) => {
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
           {DOSSIERS.map((d) => (
-            <button key={d.id} onClick={() => onNav(`dossier-${d.id}`)} style={{
+            <button key={d.id} onClick={() => handleNav(`dossier-${d.id}`)} style={{
               display: "grid", gridTemplateColumns: "10px 1fr", columnGap: 6, rowGap: 2,
               padding: "7px 10px", border: 0, borderRadius: 6,
               background: "transparent", color: "#D6DCE5",
@@ -174,12 +184,20 @@ const Sidebar = ({ active, onNav, density }) => {
   );
 };
 
-const Topbar = ({ title, breadcrumb, right, lang, onLang }) => (
+const Topbar = ({ title, breadcrumb, right, lang, onLang, isMobile, onMenu }) => (
   <header style={{
     height: 56, borderBottom: "1px solid var(--border-1)",
-    background: "var(--bg-app)", padding: "0 24px",
-    display: "flex", alignItems: "center", gap: 16, flexShrink: 0,
+    background: "var(--bg-app)", padding: isMobile ? "0 14px" : "0 24px",
+    display: "flex", alignItems: "center", gap: isMobile ? 10 : 16, flexShrink: 0,
   }}>
+    {isMobile && (
+      <button onClick={onMenu} aria-label="Menu" style={{
+        background: "transparent", border: 0, cursor: "pointer", padding: 6,
+        display: "flex", alignItems: "center", flexShrink: 0, marginLeft: -6,
+      }}>
+        <Icon name="menu" size={22} color="var(--ink-900)"/>
+      </button>
+    )}
     <div style={{ display: "flex", flexDirection: "column", gap: 0, minWidth: 0 }}>
       {breadcrumb && (
         <div style={{ fontSize: 10.5, letterSpacing: "0.12em", textTransform: "uppercase",
@@ -206,12 +224,14 @@ const Topbar = ({ title, breadcrumb, right, lang, onLang }) => (
             ))}
           </div>
         )}
-        <div style={{ display: "flex", alignItems: "center", gap: 8,
-                      background: "var(--paper)", border: "1px solid var(--border-2)",
-                      borderRadius: 999, padding: "5px 12px", fontSize: 12.5 }}>
-          <Icon name="check" size={13} color="#3D7A4E"/>
-          <span style={{ color: "var(--ink-700)" }}>{lang === "en" ? "Synced · just now" : "Synchronisé · à l'instant"}</span>
-        </div>
+        {!isMobile && (
+          <div style={{ display: "flex", alignItems: "center", gap: 8,
+                        background: "var(--paper)", border: "1px solid var(--border-2)",
+                        borderRadius: 999, padding: "5px 12px", fontSize: 12.5 }}>
+            <Icon name="check" size={13} color="#3D7A4E"/>
+            <span style={{ color: "var(--ink-700)" }}>{lang === "en" ? "Synced · just now" : "Synchronisé · à l'instant"}</span>
+          </div>
+        )}
       </>
     )}
   </header>
