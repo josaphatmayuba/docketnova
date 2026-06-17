@@ -3,6 +3,7 @@
 // whole product (revirements, new rulings, dossier risks, judge updates).
 
 const Alerts = ({ lang, onNav, tweaks, density, scenarioId, onScenario, screenId }) => {
+  const isMobile = useIsMobile(768);
   const ALERTS = [
     {
       kind: "revirement",
@@ -90,7 +91,7 @@ const Alerts = ({ lang, onNav, tweaks, density, scenarioId, onScenario, screenId
         {/* Summary strip */}
         <div style={{
           background: "var(--paper)", border: "1px solid var(--border-1)", borderRadius: 12,
-          padding: "14px 18px", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 0, marginBottom: 22,
+          padding: "14px 18px", display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: isMobile ? "16px 0" : 0, marginBottom: 22,
         }}>
           <Sum label={lang === "en" ? "Reversals" : "Revirements"} value="1" tone="oxblood"/>
           <Sum label={lang === "en" ? "New rulings" : "Nouveaux arrêts"} value="3" tone="pertinence"/>
@@ -111,6 +112,7 @@ const Alerts = ({ lang, onNav, tweaks, density, scenarioId, onScenario, screenId
                 background: "var(--paper)", border: "1px solid var(--border-1)",
                 borderRadius: 12, padding: "16px 18px",
                 display: "flex", gap: 14, alignItems: "flex-start",
+                flexWrap: isMobile ? "wrap" : "nowrap",
                 borderLeft: `3px solid ${tones.bar}`,
               }}>
                 <div style={{
@@ -119,23 +121,25 @@ const Alerts = ({ lang, onNav, tweaks, density, scenarioId, onScenario, screenId
                 }}>
                   <Icon name={a.icon} size={16} color={tones.fg}/>
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+                <div style={{ flex: 1, minWidth: isMobile ? 140 : 0 }}>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 2, flexWrap: "wrap" }}>
                     <span style={{ fontSize: 13.5, fontWeight: 600, color: "var(--ink-900)" }}>{tr(a.title, lang)}</span>
-                    <span style={{ fontSize: 11, color: "var(--ink-500)", fontFamily: "var(--font-mono)" }}>· {tr(a.time, lang)}</span>
+                    <span style={{ fontSize: 11, color: "var(--ink-500)", fontFamily: "var(--font-mono)", whiteSpace: "nowrap" }}>· {tr(a.time, lang)}</span>
                   </div>
                   <div style={{ fontSize: 13, color: "var(--ink-700)", lineHeight: 1.5 }}>{tr(a.body, lang)}</div>
-                  <div style={{ fontSize: 11.5, color: "var(--ink-500)", marginTop: 6, display: "flex", gap: 10, alignItems: "center" }}>
+                  <div style={{ fontSize: 11.5, color: "var(--ink-500)", marginTop: 6, display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "2px 8px", borderRadius: 999,
                                     background: tones.bg, color: tones.fg, fontWeight: 600, fontSize: 10.5,
-                                    letterSpacing: "0.06em", textTransform: "uppercase" }}>{a.kind}</span>
+                                    letterSpacing: "0.06em", textTransform: "uppercase", whiteSpace: "nowrap" }}>{a.kind}</span>
                     <span>{tr(a.meta, lang)}</span>
                   </div>
                 </div>
                 <button onClick={() => a.cta?.screen && onNav(a.cta.screen)} className="lb-chip" style={{
-                  alignSelf: "center", background: "var(--paper)", border: "1px solid var(--border-2)",
+                  alignSelf: isMobile ? "stretch" : "center", justifyContent: "center",
+                  background: "var(--paper)", border: "1px solid var(--border-2)",
                   padding: "6px 11px", borderRadius: 6, fontSize: 12, fontWeight: 600,
                   cursor: "pointer", color: "var(--ink-900)", display: "inline-flex", alignItems: "center", gap: 5,
+                  width: isMobile ? "100%" : "auto", whiteSpace: "nowrap",
                 }}>{tr(a.cta.label, lang)} <Icon name="arrowRight" size={12}/></button>
               </div>
             );

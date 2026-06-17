@@ -178,8 +178,9 @@ const Assistant = ({ tweaks, onNav, scenarioId, onScenario, playAll }) => {
 // ─── Scenario bar (header above the conversation) ─────────────────────
 const ScenarioBar = ({ lang, scenario, onReplay, onScenario }) => (
   <div style={{
-    padding: "10px 36px 12px", borderBottom: "1px solid var(--border-1)",
+    padding: "10px 16px 12px", borderBottom: "1px solid var(--border-1)",
     display: "flex", alignItems: "center", gap: 12, background: "var(--bg-app)",
+    overflowX: "auto",
   }}>
     <div style={{
       width: 30, height: 30, borderRadius: 8,
@@ -229,6 +230,7 @@ const MATTER_OPTIONS = [
 
 const MatterPicker = ({ lang, scenario, onScenario }) => {
   const [open, setOpen] = React.useState(false);
+  const isMobile = useIsMobile(768);
   const wrap = React.useRef(null);
   React.useEffect(() => {
     const onDoc = (e) => { if (wrap.current && !wrap.current.contains(e.target)) setOpen(false); };
@@ -259,9 +261,10 @@ const MatterPicker = ({ lang, scenario, onScenario }) => {
       </button>
       {open && (
         <div style={{
-          position: "absolute", top: "calc(100% + 6px)", right: 0, zIndex: 30,
+          position: "absolute", top: "calc(100% + 6px)", left: isMobile ? 0 : "auto", right: isMobile ? "auto" : 0, zIndex: 30,
           background: "var(--paper)", border: "1px solid var(--border-2)",
-          borderRadius: 10, boxShadow: "var(--shadow-3)", width: 280, padding: 6,
+          borderRadius: 10, boxShadow: "var(--shadow-3)",
+          width: isMobile ? "min(280px, calc(100vw - 32px))" : 280, maxWidth: "calc(100vw - 32px)", padding: 6,
         }}>
           <div style={{ padding: "6px 10px 8px", fontSize: 9.5, letterSpacing: "0.14em", textTransform: "uppercase",
                         fontWeight: 700, color: "var(--ink-500)" }}>
@@ -309,6 +312,7 @@ const MatterPicker = ({ lang, scenario, onScenario }) => {
 
 const ScenarioPicker = ({ lang, current, onPick }) => {
   const [open, setOpen] = React.useState(false);
+  const isMobile = useIsMobile(768);
   const wrap = React.useRef(null);
   React.useEffect(() => {
     const onDoc = (e) => { if (wrap.current && !wrap.current.contains(e.target)) setOpen(false); };
@@ -328,9 +332,10 @@ const ScenarioPicker = ({ lang, current, onPick }) => {
       </button>
       {open && (
         <div style={{
-          position: "absolute", top: "calc(100% + 6px)", right: 0, zIndex: 30,
+          position: "absolute", top: "calc(100% + 6px)", left: isMobile ? 0 : "auto", right: isMobile ? "auto" : 0, zIndex: 30,
           background: "var(--paper)", border: "1px solid var(--border-2)",
-          borderRadius: 10, boxShadow: "var(--shadow-3)", width: 320, padding: 6,
+          borderRadius: 10, boxShadow: "var(--shadow-3)",
+          width: isMobile ? "min(320px, calc(100vw - 32px))" : 320, maxWidth: "calc(100vw - 32px)", padding: 6,
         }}>
           {SCENARIOS.map((s) => (
             <button key={s.id} onClick={() => { onPick(s.id); setOpen(false); }} style={{

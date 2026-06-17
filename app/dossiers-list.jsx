@@ -74,6 +74,7 @@ const MATTERS = [
 ];
 
 const DossiersList = ({ lang, onNav, density }) => {
+  const isMobile = useIsMobile(768);
   const [filter, setFilter] = React.useState("all");
   const [searchText, setSearchText] = React.useState("");
   const [showNewMatterModal, setShowNewMatterModal] = React.useState(false);
@@ -115,10 +116,12 @@ const DossiersList = ({ lang, onNav, density }) => {
   const MatterRow = ({ m }) => (
     <div style={{
       padding: "12px 14px", borderRadius: 8, border: "1px solid var(--border-1)",
-      background: "var(--paper)", display: "flex", alignItems: "center", gap: 12,
+      background: "var(--paper)", display: "flex",
+      alignItems: isMobile ? "stretch" : "center",
+      flexDirection: isMobile ? "column" : "row", gap: 12,
     }}>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3, flexWrap: "wrap" }}>
           <div style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 14, fontWeight: 500, color: "var(--ink-950)" }}>
             {m.name}
           </div>
@@ -149,7 +152,7 @@ const DossiersList = ({ lang, onNav, density }) => {
             </span>
           )}
         </div>
-        <div style={{ display: "flex", gap: 10, fontSize: 11, color: "var(--ink-600)" }}>
+        <div style={{ display: "flex", gap: 10, fontSize: 11, color: "var(--ink-600)", flexWrap: "wrap" }}>
           <span>{tr(m.area, lang)}</span>
           <span>·</span>
           <span>{m.docket}</span>
@@ -157,7 +160,7 @@ const DossiersList = ({ lang, onNav, density }) => {
           <span>{m.hot && "⚠ "}{tr(m.next, lang)}</span>
         </div>
       </div>
-      <div style={{ display: "flex", gap: 6 }}>
+      <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
         <button onClick={() => onNav && onNav("assistant")} className="lb-chip" style={{
           background: "var(--paper)", border: "1px solid var(--border-2)",
           padding: "6px 11px", borderRadius: 6, fontSize: 11, fontWeight: 600,
@@ -215,7 +218,7 @@ const DossiersList = ({ lang, onNav, density }) => {
         {/* Stats strip */}
         <div style={{
           background: "var(--paper)", border: "1px solid var(--border-1)", borderRadius: 12,
-          padding: "12px 18px", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 0, marginBottom: 22,
+          padding: "12px 18px", display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: isMobile ? "16px 0" : 0, marginBottom: 22,
         }}>
           <div style={{ borderRight: "1px solid var(--border-2)", paddingRight: 18 }}>
             <div style={{ fontSize: 10, fontWeight: 600, color: "var(--ink-500)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>

@@ -97,7 +97,7 @@ const WordPlugin = ({ lang, onNav }) => (
     </div>
 
     {/* Body: doc + sidebar */}
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 360px", minHeight: 560 }}>
+    <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(220px,360px)", minHeight: 560 }}>
       {/* Doc page */}
       <div style={{ background: "#E8E6E1", padding: "24px 32px", overflow: "auto" }}>
         <div style={{
@@ -358,8 +358,10 @@ const OutlookView = ({ lang }) => {
 // ═══════════════════════════════════════════════════════════════════
 // CLIO / JURISCONCEPT SYNC — practice-management bridge
 // ═══════════════════════════════════════════════════════════════════
-const ClioSync = ({ lang, onNav }) => (
-  <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr", gap: 18 }}>
+const ClioSync = ({ lang, onNav }) => {
+  const isMobile = useIsMobile(768);
+  return (
+  <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1.4fr) minmax(0, 1fr)", gap: 18 }}>
     {/* Left — Clio app mock */}
     <div style={{ background: "var(--paper)", border: "1px solid var(--border-1)", borderRadius: 14, overflow: "hidden", boxShadow: "var(--shadow-2)" }}>
       <div style={{ background: "#1E3A5F", color: "#fff", padding: "10px 18px",
@@ -473,16 +475,19 @@ const ClioSync = ({ lang, onNav }) => (
       </div>
     </div>
   </div>
-);
+  );
+};
 
 // ═══════════════════════════════════════════════════════════════════
 // SECURITY / Barreaux compliance strip
 // ═══════════════════════════════════════════════════════════════════
-const SecurityStrip = ({ lang }) => (
+const SecurityStrip = ({ lang }) => {
+  const isMobile = useIsMobile(768);
+  return (
   <div style={{
     marginTop: 22, background: "#0E1626", color: "#FBF8F2",
     borderRadius: 14, padding: "22px 24px",
-    display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr", gap: 24, alignItems: "flex-start",
+    display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.4fr 1fr 1fr 1fr", gap: isMobile ? 18 : 24, alignItems: "flex-start",
   }}>
     <div>
       <Overline color="#E5A8B1" style={{ marginBottom: 6 }}>{lang === "en" ? "Built for Canadian bars" : "Conçu pour les Barreaux canadiens"}</Overline>
@@ -506,6 +511,7 @@ const SecurityStrip = ({ lang }) => (
       </div>
     ))}
   </div>
-);
+  );
+};
 
 Object.assign(window, { Integrations });

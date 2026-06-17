@@ -14,14 +14,16 @@ const TIMELINE = [
   { y: "2026", sol: 41 },
 ];
 
-const Revirements = ({ lang, onNav }) => (
-  <div style={{ flex: 1, overflow: "auto", padding: "28px 36px 48px" }}>
+const Revirements = ({ lang, onNav }) => {
+  const isMobile = useIsMobile(768);
+  return (
+  <div style={{ flex: 1, overflow: "auto", padding: isMobile ? "20px 16px 40px" : "28px 36px 48px" }}>
     <div style={{ maxWidth: 1080, margin: "0 auto" }}>
 
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22, gap: 24 }}>
+      <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", justifyContent: "space-between", marginBottom: 22, gap: isMobile ? 12 : 24 }}>
         <div>
           <Overline style={{ marginBottom: 4 }}>{lang === "en" ? "Reversal detection · feature 04" : "Détection de revirements · fonctionnalité 04"}</Overline>
-          <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 34, color: "var(--ink-950)", letterSpacing: "-0.02em", margin: 0 }}>
+          <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: isMobile ? 24 : 34, color: "var(--ink-950)", letterSpacing: "-0.02em", margin: 0 }}>
             {lang === "en"
               ? <>Watching <i style={{ color: "#7A1F2B" }}>Gagnon c. Cie ABC</i></>
               : <>Surveillance de <i style={{ color: "#7A1F2B" }}>Gagnon c. Cie ABC</i></>}
@@ -39,9 +41,11 @@ const Revirements = ({ lang, onNav }) => (
       {/* Banner */}
       <div style={{
         background: "#FBEEF0", border: "1px solid #F5DCE0", borderRadius: 14,
-        padding: "16px 20px", display: "flex", alignItems: "center", gap: 16, marginBottom: 22,
+        padding: "16px 20px", display: "flex", flexDirection: isMobile ? "column" : "row",
+        alignItems: isMobile ? "stretch" : "center", gap: 16, marginBottom: 22,
       }}>
-        <div style={{ width: 40, height: 40, borderRadius: 999, background: "#7A1F2B", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ display: "flex", gap: 16, alignItems: "center", flex: 1 }}>
+        <div style={{ width: 40, height: 40, borderRadius: 999, background: "#7A1F2B", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
           <Icon name="alert" size={20} color="#FBF8F2"/>
         </div>
         <div style={{ flex: 1 }}>
@@ -55,6 +59,7 @@ const Revirements = ({ lang, onNav }) => (
               ? "If opposing counsel invokes this precedent against you, you have a clean reply ready in the assistant."
               : "Si la partie adverse invoque ce précédent, vous avez une réplique nette préparée dans l'assistant."}
           </div>
+        </div>
         </div>
         <OxbloodButton icon="chat" onClick={() => onNav && onNav("assistant")}>
           {lang === "en" ? "Prepare reply" : "Préparer la réplique"}
@@ -70,7 +75,7 @@ const Revirements = ({ lang, onNav }) => (
       </div>
 
       {/* Watch list + reply */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22 }}>
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 22 }}>
         <div style={{ background: "var(--paper)", border: "1px solid var(--border-1)", borderRadius: 12, padding: "18px 20px" }}>
           <SectionHeader title={lang === "en" ? "Other precedents on watch" : "Autres précédents sous surveillance"} count="4"/>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -117,7 +122,8 @@ const Revirements = ({ lang, onNav }) => (
       </div>
     </div>
   </div>
-);
+  );
+};
 
 // Mini SVG timeline of Solidity over years.
 const SolidityTimeline = ({ lang }) => {

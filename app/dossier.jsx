@@ -2,6 +2,7 @@
 // Dossier detail — Professional lawyer workspace. Left: matter context. Right: integrated tools.
 
 const Dossier = ({ lang, onNav, screenId }) => {
+  const isMobile = useIsMobile(768);
   const [mainTab, setMainTab] = React.useState("overview");
   const [toolTab, setToolTab] = React.useState("assistant");
   const [editMode, setEditMode] = React.useState(false);
@@ -258,13 +259,13 @@ const Dossier = ({ lang, onNav, screenId }) => {
       
       {/* HEADER */}
       <div style={{ background: "var(--bg-app)", borderBottom: "1px solid var(--border-1)", padding: "20px 24px" }}>
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 20 }}>
-          <div style={{ flex: 1 }}>
+        <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "stretch" : "flex-start", justifyContent: "space-between", gap: isMobile ? 14 : 20 }}>
+          <div style={{ flex: 1, minWidth: 0 }}>
             <Overline style={{ marginBottom: 4 }}>{tr(dossier.area, lang)}</Overline>
-            <h1 style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 500, fontSize: 32, color: "var(--ink-950)", letterSpacing: "-0.02em", margin: 0, marginBottom: 8 }}>
+            <h1 style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 500, fontSize: isMobile ? 24 : 32, color: "var(--ink-950)", letterSpacing: "-0.02em", margin: 0, marginBottom: 8 }}>
               {dossier.title}
             </h1>
-            <div style={{ display: "flex", gap: 16, fontSize: 12, color: "var(--ink-600)" }}>
+            <div style={{ display: "flex", gap: 16, fontSize: 12, color: "var(--ink-600)", flexWrap: "wrap" }}>
               <span><strong>{dossier.file}</strong></span>
               <span>·</span>
               <span>{dossier.court}</span>
@@ -272,7 +273,7 @@ const Dossier = ({ lang, onNav, screenId }) => {
               <span>{lang === "en" ? "Justice" : "Juge"} {dossier.judge}</span>
             </div>
           </div>
-          <div style={{ display: "flex", gap: 8 }}>
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <button onClick={() => setEditMode(true)} style={{ padding: "8px 12px", borderRadius: 6, border: "1px solid var(--border-2)", background: "var(--paper)", cursor: "pointer", fontSize: 12, fontWeight: 600 }}>
               {lang === "en" ? "✏️ Edit" : "✏️ Modifier"}
             </button>
@@ -289,10 +290,13 @@ const Dossier = ({ lang, onNav, screenId }) => {
         </div>
       </div>
 
-      {/* MAIN CONTENT — Two columns */}
-      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
+      {/* MAIN CONTENT — Two columns (empilées sur mobile) */}
+      <div style={{ flex: 1, display: "flex", flexDirection: isMobile ? "column" : "row", overflow: isMobile ? "auto" : "hidden" }}>
         {/* LEFT COLUMN — Matter context (60%) */}
-        <div style={{ flex: "1.5", display: "flex", flexDirection: "column", borderRight: "1px solid var(--border-1)", overflow: "hidden" }}>
+        <div style={{ flex: isMobile ? "none" : "1.5", display: "flex", flexDirection: "column",
+                      borderRight: isMobile ? "none" : "1px solid var(--border-1)",
+                      borderBottom: isMobile ? "1px solid var(--border-1)" : "none",
+                      overflow: isMobile ? "visible" : "hidden" }}>
           {/* Tabs */}
           <div style={{ display: "flex", gap: 0, padding: "0 24px", background: "var(--bg-app)", borderBottom: "1px solid var(--border-1)" }}>
             {[
@@ -544,7 +548,9 @@ const Dossier = ({ lang, onNav, screenId }) => {
         </div>
 
         {/* RIGHT COLUMN — Integrated tools (40%) */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div style={{ flex: isMobile ? "none" : 1, display: "flex", flexDirection: "column",
+                      overflow: isMobile ? "visible" : "hidden",
+                      minHeight: isMobile ? 420 : 0 }}>
           {/* Tool tabs */}
           <div style={{ display: "flex", gap: 0, padding: "0 12px", background: "var(--bg-app)", borderBottom: "1px solid var(--border-1)" }}>
             {[
