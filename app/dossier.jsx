@@ -297,8 +297,8 @@ const Dossier = ({ lang, onNav, screenId }) => {
                       borderRight: isMobile ? "none" : "1px solid var(--border-1)",
                       borderBottom: isMobile ? "1px solid var(--border-1)" : "none",
                       overflow: isMobile ? "visible" : "hidden" }}>
-          {/* Tabs */}
-          <div style={{ display: "flex", gap: 0, padding: "0 24px", background: "var(--bg-app)", borderBottom: "1px solid var(--border-1)" }}>
+          {/* Tabs (défilables horizontalement sur mobile) */}
+          <div style={{ display: "flex", gap: 0, padding: isMobile ? "0 12px" : "0 24px", background: "var(--bg-app)", borderBottom: "1px solid var(--border-1)", overflowX: "auto" }}>
             {[
               { id: "overview", label: lang === "en" ? "Overview" : "Vue d'ensemble" },
               { id: "documents", label: lang === "en" ? "Documents" : "Documents" },
@@ -311,6 +311,7 @@ const Dossier = ({ lang, onNav, screenId }) => {
                 borderBottom: mainTab === t.id ? "2px solid var(--oxblood-700)" : "2px solid transparent",
                 cursor: "pointer", fontSize: 13, fontWeight: mainTab === t.id ? 600 : 500,
                 color: mainTab === t.id ? "var(--oxblood-700)" : "var(--ink-600)",
+                whiteSpace: "nowrap", flexShrink: 0,
               }}>
                 {t.label}
               </button>
@@ -318,7 +319,7 @@ const Dossier = ({ lang, onNav, screenId }) => {
           </div>
 
           {/* Content */}
-          <div style={{ flex: 1, overflow: "auto", padding: "20px 24px" }}>
+          <div style={{ flex: 1, overflow: "auto", padding: isMobile ? "16px 16px" : "20px 24px" }}>
             {mainTab === "overview" && (
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 {/* Status & strength */}
@@ -552,7 +553,7 @@ const Dossier = ({ lang, onNav, screenId }) => {
                       overflow: isMobile ? "visible" : "hidden",
                       minHeight: isMobile ? 420 : 0 }}>
           {/* Tool tabs */}
-          <div style={{ display: "flex", gap: 0, padding: "0 12px", background: "var(--bg-app)", borderBottom: "1px solid var(--border-1)" }}>
+          <div style={{ display: "flex", gap: 0, padding: "0 12px", background: "var(--bg-app)", borderBottom: "1px solid var(--border-1)", overflowX: "auto" }}>
             {[
               { id: "assistant", label: "Assistant", icon: "sparkle" },
               { id: "research", label: lang === "en" ? "Research" : "Recherche", icon: "search" },

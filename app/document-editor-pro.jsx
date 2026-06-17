@@ -2,6 +2,7 @@
 // Document Editor PRO — Full Microsoft Word features for legal documents
 
 const DocumentEditorPro = ({ lang, screenId, onNav, tweaks }) => {
+  const isMobile = useIsMobile(768);
   const [docType, setDocType] = React.useState("motion");
   const [fontSize, setFontSize] = React.useState("12");
   const [fontFamily, setFontFamily] = React.useState("georgia");
@@ -210,7 +211,7 @@ const DocumentEditorPro = ({ lang, screenId, onNav, tweaks }) => {
   return (
     <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0, background: "#F5F5F5" }}>
       {/* RIBBON MENU */}
-      <div style={{ background: "#2B5FA8", color: "#FBF8F2", padding: "0 24px", display: "flex", alignItems: "center", height: 44, gap: 32, fontSize: 13, fontWeight: 500, borderBottom: "1px solid #1F3F66" }}>
+      <div style={{ background: "#2B5FA8", color: "#FBF8F2", padding: isMobile ? "0 14px" : "0 24px", display: "flex", alignItems: "center", height: 44, gap: isMobile ? 18 : 32, fontSize: 13, fontWeight: 500, borderBottom: "1px solid #1F3F66", overflowX: "auto", flexShrink: 0 }}>
         <button style={{ background: "transparent", color: "#FBF8F2", border: 0, cursor: "pointer", fontWeight: 600, padding: "8px 0" }}>
           {lang === "en" ? "File" : "Fichier"}
         </button>
@@ -257,7 +258,7 @@ const DocumentEditorPro = ({ lang, screenId, onNav, tweaks }) => {
 
       {/* Find & Replace Panel */}
       {showFindReplace && (
-        <div style={{ background: "var(--paper)", borderBottom: "1px solid var(--border-1)", padding: "12px 24px", display: "flex", gap: 12, alignItems: "center" }}>
+        <div style={{ background: "var(--paper)", borderBottom: "1px solid var(--border-1)", padding: isMobile ? "12px 14px" : "12px 24px", display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
           <input
             type="text"
             placeholder={lang === "en" ? "Find…" : "Chercher…"}
@@ -453,20 +454,26 @@ const DocumentEditorPro = ({ lang, screenId, onNav, tweaks }) => {
         </button>
       </div>
 
-      {/* MAIN LAYOUT — Sidebar + Editor */}
-      <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
-        
+      {/* MAIN LAYOUT — Sidebar + Editor (empilés sur mobile) */}
+      <div style={{ flex: 1, display: "flex", flexDirection: isMobile ? "column" : "row", overflow: isMobile ? "auto" : "hidden", minWidth: 0 }}>
+
         {/* STYLES SIDEBAR */}
         {showStyles && (
-          <div style={{ width: "220px", background: "var(--paper)", borderRight: "1px solid var(--border-1)", overflow: "auto", padding: "16px 12px" }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: "var(--ink-500)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12 }}>
+          <div style={{ width: isMobile ? "100%" : "220px", flexShrink: 0,
+                        background: "var(--paper)",
+                        borderRight: isMobile ? "none" : "1px solid var(--border-1)",
+                        borderBottom: isMobile ? "1px solid var(--border-1)" : "none",
+                        overflow: "auto", padding: "16px 12px",
+                        maxHeight: isMobile ? 160 : "none",
+                        display: isMobile ? "flex" : "block", gap: isMobile ? 8 : 0, flexWrap: isMobile ? "wrap" : "nowrap" }}>
+            <div style={{ fontSize: 10, fontWeight: 700, color: "var(--ink-500)", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 12, width: isMobile ? "100%" : "auto" }}>
               {lang === "en" ? "Styles" : "Styles"}
             </div>
             {Object.entries(LEGAL_STYLES).map(([key, style]) => (
               <button key={key} onClick={() => applyStyle(key)} style={{
-                width: "100%", padding: "10px 12px", borderRadius: 6, border: currentStyle === key ? "2px solid #7A1F2B" : "1px solid transparent",
-                background: currentStyle === key ? "var(--oxblood-50)" : "transparent", cursor: "pointer", textAlign: "left", marginBottom: 8,
-                fontSize: 12, fontWeight: currentStyle === key ? 600 : 500, color: "var(--ink-900)"
+                width: isMobile ? "auto" : "100%", padding: "10px 12px", borderRadius: 6, border: currentStyle === key ? "2px solid #7A1F2B" : "1px solid transparent",
+                background: currentStyle === key ? "var(--oxblood-50)" : "transparent", cursor: "pointer", textAlign: "left", marginBottom: isMobile ? 0 : 8,
+                fontSize: 12, fontWeight: currentStyle === key ? 600 : 500, color: "var(--ink-900)", whiteSpace: "nowrap"
               }}>
                 {tr(style, lang)}
               </button>
@@ -475,8 +482,8 @@ const DocumentEditorPro = ({ lang, screenId, onNav, tweaks }) => {
         )}
 
         {/* DOCUMENT AREA */}
-        <div style={{ flex: 1, overflow: "auto", padding: "40px 20px", display: "flex", justifyContent: "center", background: "#D3D3D3" }}>
-          <div style={{ width: "950px", minHeight: "1200px", background: "white", boxShadow: "0 4px 12px rgba(0,0,0,0.2)", padding: "60px 60px", fontFamily: "Georgia, serif", fontSize: "12pt", lineHeight: 1.6, color: "var(--ink-950)" }}>
+        <div style={{ flex: 1, overflow: "auto", padding: isMobile ? "20px 10px" : "40px 20px", display: "flex", justifyContent: "center", background: "#D3D3D3" }}>
+          <div style={{ width: isMobile ? "100%" : "950px", maxWidth: "100%", minHeight: isMobile ? "auto" : "1200px", background: "white", boxShadow: "0 4px 12px rgba(0,0,0,0.2)", padding: isMobile ? "24px 20px" : "60px 60px", fontFamily: "Georgia, serif", fontSize: "12pt", lineHeight: 1.6, color: "var(--ink-950)" }}>
             <div
               ref={editorRef}
               contentEditable

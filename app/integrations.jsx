@@ -70,7 +70,9 @@ const Integrations = ({ lang, onNav }) => {
 // The left pane shows a draft brief; the right pane is the live add-in
 // that catches a reversed citation in real time.
 // ═══════════════════════════════════════════════════════════════════
-const WordPlugin = ({ lang, onNav }) => (
+const WordPlugin = ({ lang, onNav }) => {
+  const isMobile = useIsMobile(768);
+  return (
   <div style={{
     background: "var(--paper)", border: "1px solid var(--border-1)",
     borderRadius: 14, overflow: "hidden", boxShadow: "var(--shadow-2)",
@@ -96,10 +98,10 @@ const WordPlugin = ({ lang, onNav }) => (
       </span>
     </div>
 
-    {/* Body: doc + sidebar */}
-    <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(220px,360px)", minHeight: 560 }}>
+    {/* Body: doc + sidebar (empilés sur mobile, hauteur réduite) */}
+    <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0,1fr) minmax(220px,360px)", minHeight: isMobile ? "auto" : 560 }}>
       {/* Doc page */}
-      <div style={{ background: "#E8E6E1", padding: "24px 32px", overflow: "auto" }}>
+      <div style={{ background: "#E8E6E1", padding: isMobile ? "16px 18px" : "24px 32px", overflow: "auto" }}>
         <div style={{
           background: "#fff", maxWidth: 540, margin: "0 auto", padding: "56px 64px",
           boxShadow: "0 1px 3px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.08)",
@@ -223,7 +225,8 @@ const WordPlugin = ({ lang, onNav }) => (
       </div>
     </div>
   </div>
-);
+  );
+};
 
 const DragDropPalette = ({ lang }) => (
   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>

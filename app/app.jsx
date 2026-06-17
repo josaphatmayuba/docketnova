@@ -28,7 +28,7 @@ const ScoringExplainer = ({ lang, onNav }) => (
           : "Chaque arrêt indexé dans LexiBridge porte trois scores indépendants. Ils apparaissent sur chaque résultat de recherche, chaque arrêt cité, chaque alerte. Ensemble, ils vous disent en un coup d'œil si un précédent vaut la peine d'être cité."}
       </p>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 32 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: 12, marginBottom: 32 }}>
         {[
           { axis: "aut", name: "Autorité",   en: "Authority",  color: "#6B4A0E", bg: "#FBF3D9", v: 88,
             body: lang === "en" ? "Court hierarchy and binding weight. SCC = 100, Court of Appeal = 80–90." : "Hiérarchie de la cour et force contraignante. CSC = 100, Cour d'appel = 80–90." },
@@ -59,11 +59,13 @@ const ScoringExplainer = ({ lang, onNav }) => (
   </div>
 );
 
-const BilingualExplainer = ({ lang, onNav }) => (
-  <div style={{ flex: 1, overflow: "auto", padding: "40px 36px" }}>
+const BilingualExplainer = ({ lang, onNav }) => {
+  const isMobile = useIsMobile(768);
+  return (
+  <div style={{ flex: 1, overflow: "auto", padding: isMobile ? "24px 16px" : "40px 36px" }}>
     <div style={{ maxWidth: 760, margin: "0 auto" }}>
       <Overline style={{ marginBottom: 6 }}>{lang === "en" ? "System feature · 03" : "Fonctionnalité système · 03"}</Overline>
-      <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: 44, color: "var(--ink-950)", letterSpacing: "-0.02em", margin: "0 0 8px" }}>
+      <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: isMobile ? 30 : 44, color: "var(--ink-950)", letterSpacing: "-0.02em", margin: "0 0 8px" }}>
         {lang === "en" ? <><i style={{ color: "#7A1F2B" }}>Bilingual</i> by design</> : <>Bilingue <i style={{ color: "#7A1F2B" }}>par construction</i></>}
       </h1>
       <p style={{ fontSize: 16, lineHeight: 1.55, color: "var(--ink-700)", margin: "0 0 28px" }}>
@@ -73,24 +75,28 @@ const BilingualExplainer = ({ lang, onNav }) => (
       </p>
 
       <div style={{ background: "var(--paper)", border: "1px solid var(--border-1)", borderRadius: 12, overflow: "hidden", marginBottom: 22 }}>
-        <div style={{ padding: "14px 18px", background: "#E4ECF5", borderBottom: "1px solid var(--border-1)", display: "flex", alignItems: "center", gap: 10 }}>
+        <div style={{ padding: "14px 18px", background: "#E4ECF5", borderBottom: "1px solid var(--border-1)", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
           <Icon name="search" size={16} color="#102B57"/>
-          <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "#102B57", fontWeight: 500 }}>
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 13, color: "#102B57", fontWeight: 500, minWidth: 0, wordBreak: "break-word" }}>
             "{lang === "en" ? "dismissal without just cause" : "congédiement sans cause juste"}"
           </span>
           <span style={{ marginLeft: "auto", fontSize: 11, color: "#102B57", fontFamily: "var(--font-mono)" }}>47 ms</span>
         </div>
         <div style={{ padding: "16px 18px", display: "flex", flexDirection: "column", gap: 10 }}>
           {[CASES.Bombardier, CASES.McLeod].map((c, i) => (
-            <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 12px", border: "1px solid var(--border-1)", borderRadius: 10, gap: 14 }}>
+            <div key={i} style={{ display: "flex", flexDirection: isMobile ? "column" : "row",
+                                  justifyContent: "space-between", alignItems: isMobile ? "stretch" : "center",
+                                  padding: "10px 12px", border: "1px solid var(--border-1)", borderRadius: 10, gap: isMobile ? 10 : 14 }}>
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontSize: 15, color: "var(--ink-900)" }}>{c.title}</div>
-                <div style={{ display: "flex", gap: 8, marginTop: 3 }}>
+                <div style={{ display: "flex", gap: 8, marginTop: 3, flexWrap: "wrap", alignItems: "center" }}>
                   <LangTag lang={c.lang}/>
                   <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: "var(--ink-500)" }}>{c.citation}</span>
                 </div>
               </div>
-              <ScoreTriplet aut={c.aut} per={c.per} sol={c.sol} size="sm"/>
+              <div style={{ flexShrink: 0 }}>
+                <ScoreTriplet aut={c.aut} per={c.per} sol={c.sol} size="sm"/>
+              </div>
             </div>
           ))}
         </div>
@@ -108,7 +114,8 @@ const BilingualExplainer = ({ lang, onNav }) => (
       </InkButton>
     </div>
   </div>
-);
+  );
+};
 
 // ─── Screen registry ────────────────────────────────────────────────
 const SCREENS = {
