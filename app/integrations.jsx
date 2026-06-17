@@ -27,9 +27,9 @@ const BrandBadge = ({ brand, size = 26 }) => {
   }
   return (
     <div style={box}>
-      <img src={`https://logo.clearbit.com/${meta.domain}`} alt={brand}
+      <img src={`https://www.google.com/s2/favicons?domain=${meta.domain}&sz=64`} alt={brand}
            onError={() => setFailed(true)}
-           style={{ width: "100%", height: "100%", objectFit: "contain" }}/>
+           style={{ width: "70%", height: "70%", objectFit: "contain" }}/>
     </div>
   );
 };
