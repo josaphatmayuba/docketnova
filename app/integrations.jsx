@@ -4,18 +4,33 @@
 // embeds LexiBridge into the lawyer's existing tools so the workflow is
 // frictionless. This is the bridge from product → daily habit.
 
-// Badges de marque (logos stylisés en SVG inline)
+// Badges de marque — vrai logo officiel (Clearbit) avec repli sur une pastille dessinée.
+const BRAND_META = {
+  clio:         { domain: "clio.com",         color: "#0066CC", letter: "C" },
+  mycase:       { domain: "mycase.com",       color: "#1FA463", letter: "M" },
+  jurisconcept: { domain: "jurisconcept.ca",  color: "#7A1F2B", letter: "JC" },
+};
 const BrandBadge = ({ brand, size = 26 }) => {
-  const s = { width: size, height: size, borderRadius: 6, flexShrink: 0, display: "block" };
-  if (brand === "clio") return (
-    <svg viewBox="0 0 24 24" style={s}><rect width="24" height="24" rx="4" fill="#0066CC"/><path d="M7 12.5l3 3 7-7" stroke="#fff" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
-  );
-  if (brand === "mycase") return (
-    <svg viewBox="0 0 24 24" style={s}><rect width="24" height="24" rx="4" fill="#1FA463"/><text x="12" y="17" fontSize="12" fontWeight="700" fill="#fff" textAnchor="middle" fontFamily="system-ui, sans-serif">M</text></svg>
-  );
-  // jurisconcept (Québec)
+  const meta = BRAND_META[brand] || BRAND_META.clio;
+  const [failed, setFailed] = React.useState(false);
+  const box = {
+    width: size, height: size, borderRadius: 6, flexShrink: 0,
+    display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden",
+    background: "#fff", border: "1px solid var(--border-2)",
+  };
+  if (failed) {
+    return (
+      <div style={{ ...box, background: meta.color, border: 0 }}>
+        <span style={{ color: "#fff", fontWeight: 700, fontSize: size * 0.42, fontFamily: "system-ui, sans-serif" }}>{meta.letter}</span>
+      </div>
+    );
+  }
   return (
-    <svg viewBox="0 0 24 24" style={s}><rect width="24" height="24" rx="4" fill="#7A1F2B"/><text x="12" y="17" fontSize="12" fontWeight="700" fill="#fff" textAnchor="middle" fontFamily="Georgia, serif">JC</text></svg>
+    <div style={box}>
+      <img src={`https://logo.clearbit.com/${meta.domain}`} alt={brand}
+           onError={() => setFailed(true)}
+           style={{ width: "100%", height: "100%", objectFit: "contain" }}/>
+    </div>
   );
 };
 
