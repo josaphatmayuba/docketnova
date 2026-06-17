@@ -153,7 +153,14 @@ const JudgeCard = ({ judge, lang, onNav }) => {
         fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 20,
         color: "var(--oxblood-700)", flexShrink: 0,
       }}>
-        {judge.name[judge.name.length - 1]}
+        {judge.name
+          .replace(/^L'hon\.\s*/i, "")        // retire le titre
+          .split(/[\s-]+/)                       // mots (gère "Marie-Claude")
+          .filter(Boolean)
+          .slice(0, 2)
+          .map((w) => w[0])
+          .join("")
+          .toUpperCase()}
       </div>
 
       {/* Info */}

@@ -4,29 +4,29 @@
 // embeds LexiBridge into the lawyer's existing tools so the workflow is
 // frictionless. This is the bridge from product → daily habit.
 
-// Badges de marque (logos officiels stylisés en SVG inline)
+// Badges de marque (logos stylisés en SVG inline)
 const BrandBadge = ({ brand, size = 26 }) => {
   const s = { width: size, height: size, borderRadius: 6, flexShrink: 0, display: "block" };
-  if (brand === "word") return (
-    <svg viewBox="0 0 24 24" style={s}><rect width="24" height="24" rx="4" fill="#2B579A"/><text x="12" y="17" fontSize="13" fontWeight="700" fill="#fff" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif">W</text></svg>
+  if (brand === "clio") return (
+    <svg viewBox="0 0 24 24" style={s}><rect width="24" height="24" rx="4" fill="#0066CC"/><path d="M7 12.5l3 3 7-7" stroke="#fff" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
   );
-  if (brand === "outlook") return (
-    <svg viewBox="0 0 24 24" style={s}><rect width="24" height="24" rx="4" fill="#0F6CBD"/><text x="12" y="17" fontSize="13" fontWeight="700" fill="#fff" textAnchor="middle" fontFamily="Segoe UI, system-ui, sans-serif">O</text></svg>
+  if (brand === "mycase") return (
+    <svg viewBox="0 0 24 24" style={s}><rect width="24" height="24" rx="4" fill="#1FA463"/><text x="12" y="17" fontSize="12" fontWeight="700" fill="#fff" textAnchor="middle" fontFamily="system-ui, sans-serif">M</text></svg>
   );
-  // clio / practice management
+  // jurisconcept (Québec)
   return (
-    <svg viewBox="0 0 24 24" style={s}><rect width="24" height="24" rx="4" fill="#7A1F2B"/><path d="M7 12.5l3 3 7-7" stroke="#fff" strokeWidth="2.2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+    <svg viewBox="0 0 24 24" style={s}><rect width="24" height="24" rx="4" fill="#7A1F2B"/><text x="12" y="17" fontSize="12" fontWeight="700" fill="#fff" textAnchor="middle" fontFamily="Georgia, serif">JC</text></svg>
   );
 };
 
 const Integrations = ({ lang, onNav }) => {
-  const [tab, setTab] = React.useState("word");
+  const [tab, setTab] = React.useState("clio");
   const isMobile = useIsMobile(768);
 
   const tabs = [
-    { id: "word",    brand: "word",    label: { fr: "Microsoft Word", en: "Microsoft Word" }, short: "Word",    sub: { fr: "Plugin de rédaction", en: "Drafting plugin" } },
-    { id: "outlook", brand: "outlook", label: { fr: "Outlook",        en: "Outlook" },         short: "Outlook", sub: { fr: "Calendrier · délais", en: "Calendar · deadlines" } },
-    { id: "clio",    brand: "clio",    label: { fr: "Clio · JurisConcept", en: "Clio · JurisConcept" }, short: "Clio", sub: { fr: "Gestion de cabinet", en: "Practice management" } },
+    { id: "clio",         brand: "clio",        label: { fr: "Clio",         en: "Clio" },         short: "Clio",         sub: { fr: "Gestion de cabinet · cloud", en: "Practice management · cloud" } },
+    { id: "mycase",       brand: "mycase",      label: { fr: "MyCase",       en: "MyCase" },       short: "MyCase",       sub: { fr: "Gestion de dossiers", en: "Case management" } },
+    { id: "jurisconcept", brand: "jurisconcept", label: { fr: "JurisConcept", en: "JurisConcept" }, short: "JurisConcept", sub: { fr: "Gestion de cabinet · Québec", en: "Practice management · Quebec" } },
   ];
 
   return (
@@ -91,9 +91,7 @@ const Integrations = ({ lang, onNav }) => {
           </div>
         )}
 
-        {tab === "word" && <WordPlugin lang={lang} onNav={onNav}/>}
-        {tab === "outlook" && <OutlookView lang={lang}/>}
-        {tab === "clio" && <ClioSync lang={lang} onNav={onNav}/>}
+        <ClioSync lang={lang} onNav={onNav} product={tabs.find((t) => t.id === tab)?.short || "Clio"}/>
 
         {/* Security strip — common to all three tabs */}
         <SecurityStrip lang={lang}/>
@@ -398,15 +396,15 @@ const OutlookView = ({ lang }) => {
 // ═══════════════════════════════════════════════════════════════════
 // CLIO / JURISCONCEPT SYNC — practice-management bridge
 // ═══════════════════════════════════════════════════════════════════
-const ClioSync = ({ lang, onNav }) => {
+const ClioSync = ({ lang, onNav, product = "Clio" }) => {
   const isMobile = useIsMobile(768);
   return (
   <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1.4fr) minmax(0, 1fr)", gap: 18 }}>
-    {/* Left — Clio app mock */}
+    {/* Left — practice-management app mock */}
     <div style={{ background: "var(--paper)", border: "1px solid var(--border-1)", borderRadius: 14, overflow: "hidden", boxShadow: "var(--shadow-2)" }}>
       <div style={{ background: "#1E3A5F", color: "#fff", padding: "10px 18px",
                     display: "flex", alignItems: "center", gap: 12, fontFamily: "system-ui, -apple-system, Segoe UI", fontSize: 12.5 }}>
-        <span style={{ fontWeight: 700, letterSpacing: "0.04em", fontSize: 13 }}>CLIO</span>
+        <span style={{ fontWeight: 700, letterSpacing: "0.04em", fontSize: 13, textTransform: "uppercase" }}>{product}</span>
         <span style={{ opacity: 0.7 }}>·</span>
         <span style={{ opacity: 0.85 }}>{lang === "en" ? "Matters" : "Dossiers"}</span>
         <span style={{ marginLeft: "auto", display: "inline-flex", alignItems: "center", gap: 6, fontSize: 11, background: "rgba(255,255,255,0.15)", padding: "3px 9px", borderRadius: 999 }}>
@@ -474,8 +472,8 @@ const ClioSync = ({ lang, onNav }) => {
         <Overline color="var(--oxblood-700)" style={{ marginBottom: 8 }}>{lang === "en" ? "Zero double entry" : "Zéro double saisie"}</Overline>
         <div style={{ fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 500, color: "var(--ink-900)", lineHeight: 1.45, marginBottom: 10 }}>
           {lang === "en"
-            ? <>Open a matter in Clio at 9:02. By 9:03, LexiBridge has it indexed, scored, and 12 relevant precedents waiting.</>
-            : <>Vous ouvrez un dossier dans Clio à 9 h 02. À 9 h 03, LexiBridge l'a indexé, scoré, et 12 précédents pertinents vous attendent.</>}
+            ? <>Open a matter in {product} at 9:02. By 9:03, LexiBridge has it indexed, scored, and 12 relevant precedents waiting.</>
+            : <>Vous ouvrez un dossier dans {product} à 9 h 02. À 9 h 03, LexiBridge l'a indexé, scoré, et 12 précédents pertinents vous attendent.</>}
         </div>
         <div style={{ display: "flex", gap: 8 }}>
           <button onClick={() => onNav && onNav("dossiers")} className="lb-chip" style={{
@@ -494,8 +492,8 @@ const ClioSync = ({ lang, onNav }) => {
           {[
             { name: "Clio",          state: "live" },
             { name: "JurisConcept",  state: "live" },
+            { name: "MyCase",        state: "live" },
             { name: "PracticePanther", state: "soon" },
-            { name: "MyCase",        state: "soon" },
           ].map((p, i) => (
             <div key={i} style={{
               display: "flex", justifyContent: "space-between", alignItems: "center",
