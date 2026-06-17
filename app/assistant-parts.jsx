@@ -81,7 +81,7 @@ const CasePopover = ({ data }) => (
   <div style={{
     position: "absolute", bottom: "calc(100% + 8px)", left: "50%",
     transform: "translateX(-50%)", zIndex: 50,
-    width: 320, background: "var(--paper)",
+    width: "min(320px, calc(100vw - 32px))", maxWidth: "calc(100vw - 32px)", background: "var(--paper)",
     border: "1px solid var(--border-2)", borderRadius: 12,
     boxShadow: "var(--shadow-3)", padding: "14px 14px 12px",
     fontFamily: "var(--font-sans)", textAlign: "left",
@@ -249,7 +249,9 @@ const BlockTitle = ({ icon, label }) => (
   </div>
 );
 
-const BlockCiteList = ({ b, lang }) => (
+const BlockCiteList = ({ b, lang }) => {
+  const isMobile = useIsMobile(768);
+  return (
   <div>
     <BlockTitle icon="book" label={tr(b.title, lang)}/>
     <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -259,7 +261,8 @@ const BlockCiteList = ({ b, lang }) => (
           <div key={i} style={{
             background: "var(--paper)", border: "1px solid var(--border-1)",
             borderRadius: 10, padding: "12px 14px",
-            display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12,
+            display: "flex", flexDirection: isMobile ? "column" : "row",
+            justifyContent: "space-between", alignItems: isMobile ? "stretch" : "center", gap: isMobile ? 10 : 12,
           }}>
             <div style={{ minWidth: 0 }}>
               <div style={{ fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 500,
@@ -269,13 +272,16 @@ const BlockCiteList = ({ b, lang }) => (
               </div>
               <div style={{ fontSize: 12.5, color: "var(--ink-700)", marginTop: 4 }}>{tr(it.note, lang)}</div>
             </div>
-            <ScoreTriplet aut={c.aut} per={c.per} sol={c.sol} size="sm"/>
+            <div style={{ flexShrink: 0 }}>
+              <ScoreTriplet aut={c.aut} per={c.per} sol={c.sol} size="sm"/>
+            </div>
           </div>
         );
       })}
     </div>
   </div>
-);
+  );
+};
 
 const BlockWarn = ({ b, lang }) => {
   const tokens = tokenize(tr(b.body, lang));
