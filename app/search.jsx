@@ -17,7 +17,7 @@ const SEARCH_RESULTS = [
 }));
 
 const Search = ({ lang }) => {
-  const [query, setQuery] = React.useState(lang === "en" ? "dismissal without just cause" : "congédiement sans cause juste");
+  const [query, setQuery] = React.useState("");
   const [tab, setTab] = React.useState(lang === "en" ? "Cases" : "Arrêts");
   const [scope, setScope] = React.useState(lang === "en" ? "All" : "Tous");
   const [bilingual, setBilingual] = React.useState(true);
@@ -34,7 +34,9 @@ const Search = ({ lang }) => {
           <span style={{ position: "absolute", left: 18, top: "50%", transform: "translateY(-50%)", color: "var(--ink-400)" }}>
             <Icon name="search" size={20}/>
           </span>
-          <input value={query} onChange={(e) => setQuery(e.target.value)} style={{
+          <input value={query} onChange={(e) => setQuery(e.target.value)}
+            placeholder={lang === "en" ? "Search Canadian case law…" : "Rechercher dans la jurisprudence canadienne…"}
+            style={{
             width: "100%", boxSizing: "border-box",
             fontFamily: "var(--font-sans)", fontSize: 17, padding: "16px 18px 16px 48px",
             border: "1px solid var(--border-2)", borderRadius: 12, background: "var(--paper)",

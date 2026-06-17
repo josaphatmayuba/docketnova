@@ -197,7 +197,9 @@ const LangTag = ({ lang = "FR" }) => (
 );
 
 // ─── Case card ───────────────────────────────────────────────────────────
-const CaseCard = ({ data, onClick, dense, lang = "en", caseData }) => (
+const CaseCard = ({ data, onClick, dense, lang = "en", caseData }) => {
+  const isMobile = useIsMobile(768);
+  return (
   <div onClick={onClick} style={{
     background: "var(--paper)", border: "1px solid var(--border-1)",
     borderRadius: 12, padding: dense ? "12px 14px" : "16px 18px",
@@ -208,7 +210,8 @@ const CaseCard = ({ data, onClick, dense, lang = "en", caseData }) => (
   onMouseEnter={(e) => onClick && (e.currentTarget.style.borderColor = "var(--ink-300)")}
   onMouseLeave={(e) => onClick && (e.currentTarget.style.borderColor = "var(--border-1)")}
   >
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 14 }}>
+    <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row",
+                  justifyContent: "space-between", alignItems: isMobile ? "stretch" : "flex-start", gap: isMobile ? 12 : 14 }}>
       <div style={{ minWidth: 0, flex: 1 }}>
         <h3 style={{
           fontFamily: "var(--font-display)", fontStyle: "italic", fontWeight: 500,
@@ -218,23 +221,26 @@ const CaseCard = ({ data, onClick, dense, lang = "en", caseData }) => (
           {data.citation} · {data.court} · {data.date}
         </div>
       </div>
-      <ScoreTriplet aut={data.aut} per={data.per} sol={data.sol} size={dense ? "sm" : "md"} lang={lang} caseData={caseData}/>
+      <div style={{ flexShrink: 0 }}>
+        <ScoreTriplet aut={data.aut} per={data.per} sol={data.sol} size={dense ? "sm" : "md"} lang={lang} caseData={caseData}/>
+      </div>
     </div>
     {data.summary && (
       <div style={{ fontSize: dense ? 12.5 : 13.5, lineHeight: 1.55, color: "var(--ink-700)" }}>{data.summary}</div>
     )}
-    <div style={{ display: "flex", gap: 10, alignItems: "center", paddingTop: 8, borderTop: "1px dashed var(--border-1)" }}>
+    <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap", paddingTop: 8, borderTop: "1px dashed var(--border-1)" }}>
       <LangTag lang={data.lang || "FR"}/>
       {data.tags?.map((t, i) => (
         <span key={i} style={{
           fontSize: 11, padding: "2px 8px", borderRadius: 4,
-          background: "var(--ink-50)", color: "var(--ink-700)", fontWeight: 500,
+          background: "var(--ink-50)", color: "var(--ink-700)", fontWeight: 500, whiteSpace: "nowrap",
         }}>{t}</span>
       ))}
-      {data.note && <span style={{ marginLeft: "auto", fontSize: 11.5, color: "var(--ink-500)" }}>{data.note}</span>}
+      {data.note && <span style={{ marginLeft: isMobile ? 0 : "auto", fontSize: 11.5, color: "var(--ink-500)", whiteSpace: "nowrap" }}>{data.note}</span>}
     </div>
   </div>
-);
+  );
+};
 
 // ─── Overline header ─────────────────────────────────────────────────────
 const Overline = ({ children, color = "var(--ink-500)", style }) => (

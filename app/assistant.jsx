@@ -38,6 +38,7 @@ const Assistant = ({ tweaks, onNav, scenarioId, onScenario, playAll }) => {
   const [draft, setDraft] = React.useState("");
   const [busy, setBusy] = React.useState(false);
   const scrollRef = React.useRef(null);
+  const contentRef = React.useRef(null);
 
   // Reset when scenario or language changes
   React.useEffect(() => {
@@ -46,9 +47,25 @@ const Assistant = ({ tweaks, onNav, scenarioId, onScenario, playAll }) => {
     setReplayKey((k) => k + 1);
   }, [scenarioId, lang, replayKey === -1]);
 
+  // Auto-scroll vers le bas — y compris pendant que l'IA "écrit" (streaming).
+  // Le ResizeObserver suit la croissance du contenu ; on ne colle au bas que si
+  // l'utilisateur n'a pas remonté manuellement.
   React.useEffect(() => {
-    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  });
+    const sc = scrollRef.current;
+    const ct = contentRef.current;
+    if (!sc || !ct) return;
+    const stick = () => {
+      const nearBottom = sc.scrollHeight - sc.scrollTop - sc.clientHeight < 120;
+      if (nearBottom) sc.scrollTop = sc.scrollHeight;
+    };
+    sc.scrollTop = sc.scrollHeight; // saut initial en bas
+    let ro;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(stick);
+      ro.observe(ct);
+    }
+    return () => { if (ro) ro.disconnect(); };
+  }, [replayKey, scenarioId, lang]);
 
   // ─── Helpers ───────────────────────────────────────────────────────
   const replay = () => {
@@ -131,7 +148,7 @@ const Assistant = ({ tweaks, onNav, scenarioId, onScenario, playAll }) => {
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0 }}>
         <ScenarioBar lang={lang} scenario={scenario} onReplay={replay} onScenario={onScenario}/>
         <div ref={scrollRef} style={{ flex: 1, overflow: "auto", padding: density === "compact" ? "20px 28px 12px" : "28px 36px 16px" }}>
-          <div style={{ maxWidth: 760, margin: "0 auto", display: "flex", flexDirection: "column",
+          <div ref={contentRef} style={{ maxWidth: 760, margin: "0 auto", display: "flex", flexDirection: "column",
                         gap: density === "compact" ? 16 : 22 }}>
             {allTurns.map((m, i) => {
               if (m.role === "user") return <UserMessage key={`${replayKey}-${i}`} text={m.text} lang={lang}/>;
