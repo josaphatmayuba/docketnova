@@ -112,7 +112,7 @@ app.post('/api/verify-code', async (req, res) => {
     // Pose un cookie de session signé qui autorise l'accès à /app/
     const token = makeToken();
     res.setHeader('Set-Cookie',
-      `${COOKIE_NAME}=${token}; Path=/; Max-Age=${Math.floor(ACCESS_TTL_MS / 1000)}; HttpOnly; SameSite=Lax`
+      `${COOKIE_NAME}=${token}; Path=/; Max-Age=${Math.floor(ACCESS_TTL_MS / 1000)}; HttpOnly; Secure; SameSite=Lax`
     );
 
     res.json({ ok: true, label: row.label || null });
