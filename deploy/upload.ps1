@@ -3,7 +3,7 @@
 
 $KEY = "$env:USERPROFILE\Downloads\LightsailDefaultKey-ca-central-1 (5).pem"
 $SERVER = "admin@16.54.75.61"
-$REMOTE = "/tmp/docketnova-deploy"
+$REMOTE = "/tmp/docketnova-deploy-$([DateTimeOffset]::UtcNow.ToUnixTimeSeconds())"
 
 Write-Host "=== Preparation des fichiers ===" -ForegroundColor Cyan
 
@@ -20,18 +20,15 @@ if (Test-Path "brand") {
 Write-Host "=== Transfert vers le serveur ===" -ForegroundColor Cyan
 
 # Créer le dossier distant
-ssh -i $KEY -o StrictHostKeyChecking=no $SERVER "rm -rf $REMOTE && mkdir -p $REMOTE"
+ssh -i $KEY -o StrictHostKeyChecking=no $SERVER "mkdir -p $REMOTE"
 
 # Transférer tout le dossier deploy
 scp -i $KEY -o StrictHostKeyChecking=no -r "deploy\." "${SERVER}:${REMOTE}/"
 
 Write-Host "=== Lancement du deploiement ===" -ForegroundColor Cyan
 
-ssh -i $KEY -o StrictHostKeyChecking=no $SERVER @"
-chmod +x $REMOTE/deploy.sh
-cd $REMOTE
-bash deploy.sh
-"@
+$remoteCommand = "chmod -R u+rwX $REMOTE && cd $REMOTE && sed -i 's/\r`$//' deploy.sh setup-https.sh && chmod +x deploy.sh && sudo bash deploy.sh"
+ssh -i $KEY -o StrictHostKeyChecking=no $SERVER $remoteCommand
 
 Write-Host "=== Termine ===" -ForegroundColor Green
 Write-Host "Visitez http://16.54.75.61 pour verifier"

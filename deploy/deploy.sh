@@ -36,13 +36,13 @@ cd /opt/docketnova
 
 # 4. Créer .env si absent
 if [ ! -f .env ]; then
-  echo "DB_PASSWORD=$(openssl rand -base64 24)" > .env
+  echo "DB_PASSWORD=$(openssl rand -hex 24)" > .env
   echo "Mot de passe BD généré dans /opt/docketnova/.env"
 fi
 
 # 5. Lancer
-docker compose pull 2>/dev/null || true
-docker compose up -d --build
+docker compose -p deploy pull 2>/dev/null || true
+docker compose -p deploy up -d --build
 
 echo ""
 echo "=== Déploiement terminé ==="

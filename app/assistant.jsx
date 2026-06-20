@@ -187,37 +187,43 @@ const ScenarioBar = ({ lang, scenario, onReplay, onScenario }) => (
   <div style={{
     padding: "10px 16px 12px", borderBottom: "1px solid var(--border-1)",
     display: "flex", alignItems: "center", gap: 12, background: "var(--bg-app)",
-    overflowX: "auto",
+    overflow: "visible",
   }}>
-    <div style={{
-      width: 30, height: 30, borderRadius: 8,
-      background: "var(--bg-sunken)", border: "1px solid var(--border-1)",
-      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-    }}>
-      <Icon name={scenario.icon} size={15} color="var(--oxblood-700)"/>
-    </div>
-    <div style={{ minWidth: 0, flex: 1 }}>
-      <Overline style={{ marginBottom: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-        {scenario.crossDossier
-          ? (lang === "en" ? "Across your matters" : "À travers vos dossiers")
-          : scenario.dossier ? scenario.dossier : (lang === "en" ? "Open question" : "Question ouverte")}
-      </Overline>
-      <div style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 500,
-                    color: "var(--ink-900)", letterSpacing: "-0.005em",
-                    whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-        {tr(scenario.label, lang)}
+    {/* Left: icon + text — scrollable if narrow, but capped so pickers stay visible */}
+    <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0, flex: 1, overflow: "hidden" }}>
+      <div style={{
+        width: 30, height: 30, borderRadius: 8,
+        background: "var(--bg-sunken)", border: "1px solid var(--border-1)",
+        display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+      }}>
+        <Icon name={scenario.icon} size={15} color="var(--oxblood-700)"/>
+      </div>
+      <div style={{ minWidth: 0 }}>
+        <Overline style={{ marginBottom: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+          {scenario.crossDossier
+            ? (lang === "en" ? "Across your matters" : "À travers vos dossiers")
+            : scenario.dossier ? scenario.dossier : (lang === "en" ? "Open question" : "Question ouverte")}
+        </Overline>
+        <div style={{ fontFamily: "var(--font-display)", fontSize: 16, fontWeight: 500,
+                      color: "var(--ink-900)", letterSpacing: "-0.005em",
+                      whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+          {tr(scenario.label, lang)}
+        </div>
       </div>
     </div>
-    <MatterPicker lang={lang} scenario={scenario} onScenario={onScenario}/>
-    <ScenarioPicker lang={lang} current={scenario.id} onPick={onScenario}/>
-    <button onClick={onReplay} className="lb-chip" style={{
-      background: "var(--paper)", border: "1px solid var(--border-2)",
-      padding: "6px 10px", borderRadius: 8, cursor: "pointer",
-      fontSize: 12, fontWeight: 500, color: "var(--ink-700)",
-      display: "inline-flex", alignItems: "center", gap: 5,
-    }}>
-      <Icon name="refresh" size={13}/>{lang === "en" ? "Replay" : "Rejouer"}
-    </button>
+    {/* Right: pickers — never clipped, dropdowns escape freely */}
+    <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+      <MatterPicker lang={lang} scenario={scenario} onScenario={onScenario}/>
+      <ScenarioPicker lang={lang} current={scenario.id} onPick={onScenario}/>
+      <button onClick={onReplay} className="lb-chip" style={{
+        background: "var(--paper)", border: "1px solid var(--border-2)",
+        padding: "6px 10px", borderRadius: 8, cursor: "pointer",
+        fontSize: 12, fontWeight: 500, color: "var(--ink-700)",
+        display: "inline-flex", alignItems: "center", gap: 5,
+      }}>
+        <Icon name="refresh" size={13}/>{lang === "en" ? "Replay" : "Rejouer"}
+      </button>
+    </div>
   </div>
 );
 
@@ -237,13 +243,22 @@ const MATTER_OPTIONS = [
 
 const MatterPicker = ({ lang, scenario, onScenario }) => {
   const [open, setOpen] = React.useState(false);
-  const isMobile = useIsMobile(768);
+  const [pos, setPos] = React.useState({ top: 0, right: 0 });
+  const btnRef = React.useRef(null);
   const wrap = React.useRef(null);
   React.useEffect(() => {
     const onDoc = (e) => { if (wrap.current && !wrap.current.contains(e.target)) setOpen(false); };
     document.addEventListener("mousedown", onDoc);
     return () => document.removeEventListener("mousedown", onDoc);
   }, []);
+
+  const handleOpen = () => {
+    if (btnRef.current) {
+      const r = btnRef.current.getBoundingClientRect();
+      setPos({ top: r.bottom + 6, right: window.innerWidth - r.right });
+    }
+    setOpen((o) => !o);
+  };
 
   // Resolve label of the active matter from the current scenario.
   const activeOpt = MATTER_OPTIONS.find((o) => o.scenario === scenario.id) || MATTER_OPTIONS[5];
@@ -255,7 +270,7 @@ const MatterPicker = ({ lang, scenario, onScenario }) => {
 
   return (
     <div ref={wrap} style={{ position: "relative" }}>
-      <button onClick={() => setOpen((o) => !o)} className="lb-chip" style={{
+      <button ref={btnRef} onClick={handleOpen} className="lb-chip" style={{
         display: "inline-flex", alignItems: "center", gap: 6,
         background: "var(--paper)", border: "1px solid var(--border-2)",
         padding: "6px 10px", borderRadius: 8, cursor: "pointer",
@@ -266,12 +281,12 @@ const MatterPicker = ({ lang, scenario, onScenario }) => {
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{activeLabel}</span>
         <Icon name="chevDown" size={11} color="var(--ink-500)"/>
       </button>
-      {open && (
+      {open && ReactDOM.createPortal(
         <div style={{
-          position: "absolute", top: "calc(100% + 6px)", left: isMobile ? 0 : "auto", right: isMobile ? "auto" : 0, zIndex: 30,
+          position: "fixed", top: pos.top, right: pos.right, zIndex: 1000,
           background: "var(--paper)", border: "1px solid var(--border-2)",
           borderRadius: 10, boxShadow: "var(--shadow-3)",
-          width: isMobile ? "min(280px, calc(100vw - 32px))" : 280, maxWidth: "calc(100vw - 32px)", padding: 6,
+          width: "min(280px, calc(100vw - 16px))", padding: 6,
         }}>
           <div style={{ padding: "6px 10px 8px", fontSize: 9.5, letterSpacing: "0.14em", textTransform: "uppercase",
                         fontWeight: 700, color: "var(--ink-500)" }}>
@@ -311,7 +326,8 @@ const MatterPicker = ({ lang, scenario, onScenario }) => {
               </React.Fragment>
             );
           })}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
@@ -319,16 +335,26 @@ const MatterPicker = ({ lang, scenario, onScenario }) => {
 
 const ScenarioPicker = ({ lang, current, onPick }) => {
   const [open, setOpen] = React.useState(false);
-  const isMobile = useIsMobile(768);
+  const [pos, setPos] = React.useState({ top: 0, right: 0 });
+  const btnRef = React.useRef(null);
   const wrap = React.useRef(null);
   React.useEffect(() => {
     const onDoc = (e) => { if (wrap.current && !wrap.current.contains(e.target)) setOpen(false); };
     document.addEventListener("mousedown", onDoc);
     return () => document.removeEventListener("mousedown", onDoc);
   }, []);
+
+  const handleOpen = () => {
+    if (btnRef.current) {
+      const r = btnRef.current.getBoundingClientRect();
+      setPos({ top: r.bottom + 6, right: window.innerWidth - r.right });
+    }
+    setOpen((o) => !o);
+  };
+
   return (
     <div ref={wrap} style={{ position: "relative" }}>
-      <button onClick={() => setOpen((o) => !o)} className="lb-chip" style={{
+      <button ref={btnRef} onClick={handleOpen} className="lb-chip" style={{
         background: "var(--paper)", border: "1px solid var(--border-2)",
         padding: "6px 10px", borderRadius: 8, cursor: "pointer",
         fontSize: 12, fontWeight: 500, color: "var(--ink-700)",
@@ -337,12 +363,12 @@ const ScenarioPicker = ({ lang, current, onPick }) => {
         <Icon name="play" size={12}/>{lang === "en" ? "Scenarios" : "Scénarios"}
         <Icon name="chevDown" size={11} color="var(--ink-500)"/>
       </button>
-      {open && (
+      {open && ReactDOM.createPortal(
         <div style={{
-          position: "absolute", top: "calc(100% + 6px)", left: isMobile ? 0 : "auto", right: isMobile ? "auto" : 0, zIndex: 30,
+          position: "fixed", top: pos.top, right: pos.right, zIndex: 1000,
           background: "var(--paper)", border: "1px solid var(--border-2)",
           borderRadius: 10, boxShadow: "var(--shadow-3)",
-          width: isMobile ? "min(320px, calc(100vw - 32px))" : 320, maxWidth: "calc(100vw - 32px)", padding: 6,
+          width: "min(320px, calc(100vw - 16px))", padding: 6,
         }}>
           {SCENARIOS.map((s) => (
             <button key={s.id} onClick={() => { onPick(s.id); setOpen(false); }} style={{
@@ -364,7 +390,8 @@ const ScenarioPicker = ({ lang, current, onPick }) => {
               </div>
             </button>
           ))}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
